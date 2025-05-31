@@ -2,12 +2,14 @@
 
 module PlatformHash # rubocop:disable Metrics/ModuleLength,Style/Documentation
   PLATFORM_HASH = {
-    wasm32: {
-      wasip1: {
+    wasip1: {
+      wasm32: {
         oci: 'wasip1/wasm',
         target: 'wasm32-wasip1'
-      },
-      wasip2: {
+      }
+    },
+    wasip2: {
+      wasm32: {
         oci: 'wasi/wasm',
         target: 'wasm32-wasip2'
       }
