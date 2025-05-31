@@ -26,10 +26,15 @@ jobs:
           path: cinnabar
           ref: 9bb73e96bb904c0b8f1ed82f3a7a58c5bb88eb39
 
-      - name: hello world
+      - name: (example) run cargo command
         run: |
-          pp `ls`
-          p 'Hello World'
+          {
+            cargo: nil,
+            build: nil,
+            profile: 'release',
+            verbose: true,
+            target: 'x86_64-unknown-linux-musl'
+          }.then(&run)
 ```
 
 See also: [build-wasi.yml](https://github.com/2moe/glossa/blob/dev/.github/workflows/build-wasi.yml)
