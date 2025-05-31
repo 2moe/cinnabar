@@ -17,13 +17,18 @@ class FileCompressor
     options ||= {}
     opts = DEFAULT.merge(options)
 
-    required_keys = %i[tag target pkg_name suffix docker_context cargo_build_profile]
+    required_keys = %i[tag pkg_name suffix docker_context cargo_build_profile]
     missing_keys = required_keys.reject { |key| opts.key?(key) }
 
     raise ArgumentError, "Missing required options: #{missing_keys.join(', ')}" unless missing_keys.empty?
 
-    @tag, @target, @pkg_name, @suffix, @docker_context, @cargo_build_profile =
+    @tag, @pkg_name, @suffix, @docker_context, @cargo_build_profile =
       opts.values_at(*required_keys)
+
+    require_ci 'docker/platform_hash'
+    platform_info = PlatformHash.platform_info(@os, @arch)
+
+    @target = opts[:target] || platform_info[:target]
   end
 
   # -> dest_file

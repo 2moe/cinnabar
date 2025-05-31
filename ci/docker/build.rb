@@ -27,8 +27,8 @@ class DockerBuild
   end
 
   def build # rubocop:disable Metrics/MethodLength
-    require_ci 'docker/platform_hash'
     require_ci 'docker/build_cfg'
+    require_ci 'docker/platform_hash'
 
     platform_info = PlatformHash.platform_info(@os, @arch)
 
