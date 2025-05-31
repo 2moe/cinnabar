@@ -9,16 +9,17 @@ end
 # build docker image
 class DockerBuild
   DEFAULT = {
-    docker_file: 'Dockerfile'
+    docker_file: 'Dockerfile',
+    docker_context: 'docker_tmp'
   }.freeze
 
   def initialize(options = {})
     options ||= {}
     opts = DEFAULT.merge(options)
 
-    required_keys = %i[os arch tag docker_repo docker_context]
+    required_keys = %i[os arch tag docker_repo]
     missing_keys = required_keys.reject { |key| opts.key?(key) }
-    required_keys.concat(%i[docker_file platform])
+    required_keys.concat(%i[docker_context docker_file platform])
 
     raise ArgumentError, "Missing required options: #{missing_keys.join(', ')}" unless missing_keys.empty?
 
