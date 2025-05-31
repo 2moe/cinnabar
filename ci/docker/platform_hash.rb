@@ -2,14 +2,12 @@
 
 module PlatformHash # rubocop:disable Metrics/ModuleLength,Style/Documentation
   PLATFORM_HASH = {
-    wasip1: {
-      wasm32: {
+    wasm32: {
+      wasip1: {
         oci: 'wasip1/wasm',
         target: 'wasm32-wasip1'
-      }
-    },
-    wasip2: {
-      wasm32: {
+      },
+      wasip2: {
         oci: 'wasi/wasm',
         target: 'wasm32-wasip2'
       }
@@ -115,7 +113,7 @@ module PlatformHash # rubocop:disable Metrics/ModuleLength,Style/Documentation
   }.freeze
 
   def self.platform_info(os, arch)
-    PLATFORM_HASH[os.to_sym][arch.to_sym] or
+    PLATFORM_HASH[arch.to_sym][os.to_sym] or
       warn "(Maybe) unsupported: #{os}/#{arch}"
   end
 end
