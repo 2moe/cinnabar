@@ -5,7 +5,7 @@ def create_and_push_manifest(repo: nil, tags: nil)
 
   # Create manifest
   %W[docker manifest create --amend #{main_image}]
-    .concat(tags)
+    .concat(tags.map { "#{repo}:#{_1}" })
     .then(&run)
 
   # Push manifest
