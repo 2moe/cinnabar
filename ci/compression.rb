@@ -13,16 +13,16 @@ class FileCompressor
     cargo_build_profile: 'thin'
   }.freeze
 
-  def initialize(options = nil)
+  def initialize(options = nil) # rubocop:disable Metrics/AbcSize
     options ||= {}
     opts = DEFAULT.merge(options)
 
-    required_keys = %i[tag pkg_name suffix docker_context cargo_build_profile]
+    required_keys = %i[os arch tag pkg_name suffix docker_context cargo_build_profile]
     missing_keys = required_keys.reject { |key| opts.key?(key) }
 
     raise ArgumentError, "Missing required options: #{missing_keys.join(', ')}" unless missing_keys.empty?
 
-    @tag, @pkg_name, @suffix, @docker_context, @cargo_build_profile =
+    @os, @arch, @tag, @pkg_name, @suffix, @docker_context, @cargo_build_profile =
       opts.values_at(*required_keys)
 
     require_ci 'docker/platform_hash'
