@@ -34,7 +34,6 @@ class FileCompressor
 
   # -> dest_file
   def prepare_file
-    create_directories
     source_path = prepare_source_file
     prepare_destination_file(source_path)
   end
@@ -72,6 +71,8 @@ class FileCompressor
 
   # -> cargo_target_file
   def copy_cargo_target_file_to_docker_context_dir
+    create_directories
+
     target_dir = ENV['CARGO_TARGET_DIR'] || 'target'
     "#{target_dir}/#{@target}/#{@cargo_build_profile}/#{@pkg_name}#{@suffix}"
       .tap { FileUtils.cp(_1, @docker_context) }
