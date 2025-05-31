@@ -70,11 +70,15 @@ class FileCompressor
     fs.mkdir_p('release')
   end
 
-  def prepare_source_file
+  # -> cargo_target_file
+  def copy_cargo_target_file_to_docker_context_dir
     target_dir = ENV['CARGO_TARGET_DIR'] || 'target'
-    source = "#{target_dir}/#{@target}/#{@cargo_build_profile}/#{@pkg_name}#{@suffix}"
+    "#{target_dir}/#{@target}/#{@cargo_build_profile}/#{@pkg_name}#{@suffix}"
+      .tap { FileUtils.cp(_1, @docker_context) }
+  end
 
-    FileUtils.cp(source, @docker_context)
+  def prepare_source_file
+    source = copy_cargo_target_file_to_docker_context_dir
 
     # Handle non-WASM files (create tar archive)
     if @suffix.to_s.empty?
