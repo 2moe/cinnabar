@@ -17,8 +17,9 @@ class FileCompressor
     options ||= {}
     opts = DEFAULT.merge(options)
 
-    required_keys = %i[os arch tag pkg_name suffix docker_context cargo_build_profile]
+    required_keys = %i[os arch tag pkg_name suffix]
     missing_keys = required_keys.reject { |key| opts.key?(key) }
+    required_keys.concat(%i[docker_context cargo_build_profile])
 
     raise ArgumentError, "Missing required options: #{missing_keys.join(', ')}" unless missing_keys.empty?
 
@@ -71,7 +72,7 @@ class FileCompressor
 
   def prepare_source_file
     target_dir = ENV['CARGO_TARGET_DIR'] || 'target'
-    source = "#{target_dir}/#{@target}/#{@profile}/#{@pkg_name}#{@suffix}"
+    source = "#{target_dir}/#{@target}/#{@cargo_build_profile}/#{@pkg_name}#{@suffix}"
 
     FileUtils.cp(source, @docker_context)
 
