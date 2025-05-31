@@ -80,7 +80,7 @@ class FileCompressor
   def prepare_source_file
     source = copy_cargo_target_file_to_docker_context_dir
 
-    # Handle non-WASM files (create tar archive)
+    # Handle no-suffix files (create tar archive)
     if @suffix.to_s.empty?
       tar_file = "#{source}.tar"
       %W[tar --posix -cvf #{tar_file} #{source}].then(&run)
