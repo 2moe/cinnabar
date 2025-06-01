@@ -74,7 +74,7 @@ class FileCompressor
     create_directories
 
     target_dir = ENV['CARGO_TARGET_DIR'] || 'target'
-    "#{target_dir}#{@target}/#{@cargo_build_profile}/#{@pkg_name}#{@suffix}"
+    "#{target_dir}/#{@target}/#{@cargo_build_profile}/#{@pkg_name}#{@suffix}"
       .then { File.realpath(_1) }
       .tap { FileUtils.cp(_1, @docker_context) }
   end
