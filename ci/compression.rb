@@ -42,13 +42,16 @@ class FileCompressor
     run_zstd_compression(prepare_file)
   end
 
-  def run_pigz(file_path, format = 'gz')
-    cmd = %w[pigz -11 -v]
+  # -> pid
+  def run_pigz_compression(file_path, format = 'gz')
+    cmd = %w[pigz -11 -kfv]
     cmd << '--zip' if format == 'zip'
     cmd << file_path
-    cmd.then(&run)
+    cmd.then(&run_in_bg)
   end
 
+  # -> pid
+  # sig { returns(Integer) }
   def run_zstd_compression(file_path) # rubocop:disable Metrics/MethodLength
     {
       zstd: nil,
