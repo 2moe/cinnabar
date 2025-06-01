@@ -114,3 +114,22 @@ class FileCompressor
     dest
   end
 end
+
+# - src_files: Array[String], e.g., ['file1.txt', 'file2.txt']
+# - dst_file: String, e.g., 'archive.zip
+#
+# -> pid
+def run_7z(dst_file:, src_files:, num_of_threads: 4, use_deflate64: false)
+  ext = File.extname(dst_file)[1..]
+
+  algo =
+    if ext == 'zip'
+      use_deflate64 ? 'Deflate64' : 'Deflate'
+    else
+      'lzma'
+    end
+
+  %W[7z a -t#{ext} -mm=#{algo} -mmt#{num_of_threads} -mx9 $zip_file]
+    .concat(src_files)
+    .then(&run_in_bg)
+end
