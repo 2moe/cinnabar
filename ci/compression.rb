@@ -39,39 +39,20 @@ class FileCompressor
   end
 
   # -> pid
-  def compress(format = 'zstd')
+  def compress(format = 'zstd') # rubocop:disable Metrics/MethodLength
     case format
     when 'zstd'
-      run_zstd_compression(prepare_file)
+      run_zstd(prepare_file)
+    when 'zopfli-zip'
+      run_pigz(prepare_file, 'zip')
     when 'zip'
-      run_pigz_compression(prepare_file, 'zip')
+      run_7z(src_files: [prepare_file])
+    when '7z'
+      file = prepare_file
+      run_7z(src_files: [file], dst_file: "#{file}.7z")
     else
-      run_pigz_compression(prepare_file)
+      run_pigz(prepare_file)
     end
-  end
-
-  # -> pid
-  def run_pigz_compression(file_path, format = 'gz')
-    cmd = %w[pigz -11 -kfv]
-    cmd << '--zip' if format == 'zip'
-    cmd << file_path
-    cmd.then(&run_in_bg)
-  end
-
-  # -> pid
-  # sig { returns(Integer) }
-  def run_zstd_compression(file_path) # rubocop:disable Metrics/MethodLength
-    {
-      zstd: nil,
-      "-T0": nil,   # Multithreaded compression
-      rm: true,     # Delete input file after success
-      force: true,
-      verbose: true,
-      "-19": nil    # Compression level
-    }
-      .then(&hash_to_args)
-      .concat([file_path, '-o', "#{file_path}.zst"])
-      .then(&run_in_bg)
   end
 
   def create_directories
@@ -81,7 +62,8 @@ class FileCompressor
   end
 
   # -> cargo_target_file
-  def copy_cargo_target_file_to_docker_context_dir
+  # old_name: copy_cargo_target_file_to_docker_context_dir
+  def cp_target_file_to_context
     create_directories
 
     target_dir = ENV['CARGO_TARGET_DIR'] || 'target'
@@ -91,12 +73,12 @@ class FileCompressor
   end
 
   def prepare_source_file
-    source = copy_cargo_target_file_to_docker_context_dir
+    source = cp_target_file_to_context
 
     # Handle no-suffix files (create tar archive)
     if @suffix.to_s.empty?
       tar_file = "#{source}.tar"
-      %W[tar --posix -cvf #{tar_file} #{source}].then(&run)
+      run_tar(tar_file: tar_file, src_files: [source])
       return tar_file
     end
     source
@@ -115,12 +97,43 @@ class FileCompressor
   end
 end
 
+def run_tar(tar_file: 'a.tar', src_files: [])
+  %W[tar --posix -cvf #{tar_file}]
+    .concat(src_files)
+    .then(&run)
+end
+
+# -> pid
+# sig { returns(Integer) }
+def run_zstd(file_path) # rubocop:disable Metrics/MethodLength
+  {
+    zstd: nil,
+    "-T0": nil,   # Multithreaded compression
+    rm: true,     # Delete input file after success
+    force: true,
+    verbose: true,
+    "-19": nil    # Compression level
+  }
+    .then(&hash_to_args)
+    .concat([file_path, '-o', "#{file_path}.zst"])
+    .then(&run_in_bg)
+end
+
+# -> pid
+def run_pigz(file_path, format = 'gz')
+  cmd = %w[pigz -11 -kfv]
+  cmd << '--zip' if format == 'zip'
+  cmd << file_path
+  cmd.then(&run_in_bg)
+end
+
 # - src_files: Array[String], e.g., ['file1.txt', 'file2.txt']
 # - dst_file: String, e.g., 'archive.zip
 #
 # -> pid
-def run_7z(dst_file:, src_files:, num_of_threads: 4, use_deflate64: false)
-  ext = File.extname(dst_file)[1..]
+def run_7z(src_files:, dst_file: nil, num_of_threads: 4, use_deflate64: false) # rubocop:disable Metrics/MethodLength
+  dst_file ||= "#{File.basename(src_files.first)}.zip"
+  ext = File.extname(dst_file).downcase[1..]
 
   algo =
     if ext == 'zip'
@@ -129,7 +142,8 @@ def run_7z(dst_file:, src_files:, num_of_threads: 4, use_deflate64: false)
       'lzma'
     end
 
-  %W[7z a -t#{ext} -mm=#{algo} -mmt#{num_of_threads} -mx9 $zip_file]
+  %W[7z a -t#{ext} -mm=#{algo} -mmt#{num_of_threads} -mx9]
+    .push(dst_file)
     .concat(src_files)
     .then(&run_in_bg)
 end
