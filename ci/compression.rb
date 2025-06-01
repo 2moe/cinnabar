@@ -38,8 +38,16 @@ class FileCompressor
     prepare_destination_file(source_path)
   end
 
-  def compress
-    run_zstd_compression(prepare_file)
+  # -> pid
+  def compress(format = 'zstd')
+    case format
+    when 'zstd'
+      run_zstd_compression(prepare_file)
+    when 'zip'
+      run_pigz_compression(prepare_file, 'zip')
+    else
+      run_pigz_compression(prepare_file)
+    end
   end
 
   # -> pid
