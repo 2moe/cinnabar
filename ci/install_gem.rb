@@ -1,7 +1,7 @@
 def install_gem(req: 'digest/blake3', gem_name: 'blake3-rb')
   require req
 rescue LoadError => e
-  p e
+  warn "ignore: #{e}"
 
   case path = ENV['GITHUB_PATH']
   in nil | ''
