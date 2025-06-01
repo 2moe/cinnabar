@@ -1,5 +1,15 @@
 # Cinnabar
 
+## Preface
+
+Q: Why is it named Cinnabar?  
+
+A:
+
+1. Cinnabar was an ingredient used by ancient Daoist alchemists in their elixirs, much like this project serves as an "ingredient" within CI workflows.  
+2. Cinnabar is toxic. This project was developed for *Dirty and Quick* purposes and may produce unexpected side effects—in a sense, it is not entirely harmless.  
+3. Cinnabar, a mineral form of mercury sulfide, is a deep red-colored stone. And ruby is also a deep red stone. Naming a Ruby project "Cinnabar" is particularly fitting.
+
 ## Usage
 
 Github Actions for cinnabar
