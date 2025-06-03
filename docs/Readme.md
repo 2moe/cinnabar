@@ -34,7 +34,7 @@ jobs:
         with:
           repository: 2moe/cinnabar
           path: cinnabar
-          ref: dde8c45068099ac8acbc0532c0297528c4155785
+          ref: cf1b9d3d48cf579fa1969b0d2453e6f859a2ae09
 
       - name: (example) run cargo command
         run: |
@@ -44,7 +44,9 @@ jobs:
             profile: 'release',
             verbose: true,
             target: 'x86_64-unknown-linux-musl'
-          }.then(&run)
+          } 
+            .then(&hash_to_argv)
+            .then(&run)
 ```
 
 See also: [build-wasi.yml](https://github.com/2moe/glossa/blob/dev/.github/workflows/build-wasi.yml)
