@@ -114,7 +114,7 @@ def run_zstd(file_path) # rubocop:disable Metrics/MethodLength
     verbose: true,
     "-19": nil    # Compression level
   }
-    .then(&hash_to_args)
+    .then(&hash_to_argv)
     .concat([file_path, '-o', "#{file_path}.zst"])
     .then(&run_in_bg)
 end

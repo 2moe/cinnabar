@@ -7,7 +7,7 @@ end
 
 def build_wasi_p2(cargo_opts)
   cargo_opts
-    .then(&hash_to_args)
+    .then(&hash_to_argv)
     .then(&run)
 end
 
@@ -25,7 +25,7 @@ def build_wasi_p1(cargo_opts)
         .join(',')
   }
     .then { cargo_opts.merge _1 }
-    .then(&hash_to_args)
+    .then(&hash_to_argv)
     .then(&run)
 end
 

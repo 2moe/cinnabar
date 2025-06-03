@@ -97,10 +97,10 @@ end
 # A convenient lambda method: converts a hash into command-line arguments
 #
 # Example：
-#   { v: true, path: '/path/to/dir' }.then(&hash_to_args) # => ["-v", "--path", "/path/to/dir"]
+#   { v: true, path: '/path/to/dir' }.then(&hash_to_argv) # => ["-v", "--path", "/path/to/dir"]
 #
 # sig { returns(T.proc.params(options: Hash).returns(T::Array[String])) }
-def hash_to_args
+def hash_to_argv
   ->(options) do
     Argvise.build(options)
   end

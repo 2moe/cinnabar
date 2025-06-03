@@ -44,7 +44,7 @@ class DockerBuild
       .docker_build_options
       .merge(config.slice(:platform, :tag, :file))
       .merge(tag: "#{@docker_repo}:#{config[:tag]}")
-      .then(&hash_to_args)
+      .then(&hash_to_argv)
       .push(@docker_context)
       .then(&run)
   end
