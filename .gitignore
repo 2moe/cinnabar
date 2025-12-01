@@ -4,10 +4,12 @@ target
 tmp
 _tmp.*
 _tmp_*
+bin/tapioca
 
 .directory
 .thumbnails*
 .DS_Store
+._.DS_Store
 desktop.ini
 Thumbs.db
 Thumbs.db:encryptable
@@ -16,7 +18,12 @@ Thumbs.db:encryptable
 !/src
 !/License
 !/docs
-!/ci
+!/ci.rb
+!/.rubocop.yml
+!/lib
+!/bin
+!/misc
+!/*.gemspec
 # !/examples
 # !/tests
 # !/.rustfmt.toml

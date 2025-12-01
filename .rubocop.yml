@@ -1,0 +1,45 @@
+# ln ~/.config/rubocop/config.yml .rubocop.yml
+AllCops:
+  TargetRubyVersion: 3.1
+
+Lint/MissingCopEnableDirective:
+  Enabled: false
+Lint/RedundantCopDisableDirective:
+  Enabled: false
+Lint/EmptyExpression:
+  # disabled => allow ()
+  Enabled: false
+
+# https://docs.rubocop.org/rubocop/cops_style.html
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: diff_comma
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: diff_comma
+Style/Lambda:
+  EnforcedStyle: literal
+Style/ModuleFunction:
+  # EnforcedStyle: extend_self
+  EnforcedStyle: module_function
+Style/BlockDelimiters:
+  EnforcedStyle: braces_for_chaining
+Style/Documentation:
+  Enabled: false
+Style/ClassAndModuleChildren:
+  EnforcedStyle: compact
+
+# https://docs.rubocop.org/rubocop/cops_metrics.html
+Metrics/MethodLength:
+  Max: 15
+
+# https://docs.rubocop.org/rubocop/cops_layout.html
+Layout/CaseIndentation:
+  EnforcedStyle: end
+  IndentOneStep: true
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented_relative_to_receiver
+
+
+Naming/AsciiIdentifiers:
+  # AsciiConstants: false
+  Enabled: false
+

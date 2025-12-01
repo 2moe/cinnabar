@@ -1,0 +1,35 @@
+#!/usr/bin/env ruby
+# rubocop:disable Style/MixinUsage
+# rubocop:disable Naming/HeredocDelimiterNaming
+# frozen_string_literal: true
+
+require 'irb'
+
+# To ensure compatibility with "--disable=gems", we must load the external
+# `argvise` & `sinlog` first, and then we can load `cinnabar`.
+require_relative '../misc/download/argvise'
+require_relative '../misc/download/sinlog'
+
+require_relative '../lib/cinnabar'
+
+include Sinlog::Mixin
+include Argvise::HashMixin
+
+-> {
+  # red = "\e[31m"
+  green = "\e[32m"
+  # yellow = "\e[33m"
+  blue = "\e[34m"
+  magenta = "\e[35m"
+  # cyan = "\e[36m"
+  reset = "\e[0m"
+
+  puts 'You can manually load the following modules:'
+  %w[
+    CiDir FunctionPipe CommandRunner Downloader::StrMixin
+  ].map { "#{green}include #{magenta}Cinnabar::#{blue}#{_1}\n" }
+    .each(&:display)
+  puts reset
+}.call
+
+IRB.start

@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+# typed: ignore
+# frozen_string_literal: true
+
+# -----------------
+# Depends: tree, ruby (>= 3.4.0)
+# Description: Build and show gem contents.
+# -----------------
+require 'rubygems'
+require 'pathname'
+
+Pathname(__dir__)
+  .parent
+  .then { Dir.chdir(it) }
+
+proj = 'cinnabar'
+
+system <<~CMD
+  gem uninstall #{proj}
+  gem build #{proj}
+  gem install #{proj}
+CMD
+
+installed_dir = Gem::Specification.find_by_name(proj).gem_dir
+system('tree', installed_dir)

@@ -2,29 +2,29 @@
 
 [![Gem Version](https://badge.fury.io/rb/cinnabar.svg?icon=si%3Arubygems)](https://rubygems.org/gems/cinnabar)
 
-A handy toolkit tailored for CI workflows.
+專為 CI 流程打造的工具集。
 
 ---
 
-| Language/語言                   | ID         |
-| ------------------------------- | ---------- |
-| English                         | en-Latn-US |
-| [简体中文](./Readme-zh.md)      | zh-Hans-CN |
-| [繁體中文](./Readme-zh-Hant.md) | zh-Hant-TW |
+| Language/語言              | ID         |
+| -------------------------- | ---------- |
+| 繁體中文                   | zh-Hant-TW |
+| [English](./Readme.md)     | en-Latn-US |
+| [简体中文](./Readme-zh.md) | zh-Hans-CN |
 
 ---
 
-## Preface
+## 前言
 
-Q: Why is it named Cinnabar?
+**問：為何取名為 Cinnabar（硃砂）？**
 
-A:
+**答：**
 
-1. Cinnabar was an ingredient used by ancient Daoist alchemists in their elixirs, much like this project serves as an "ingredient" within CI workflows.
-2. Cinnabar is toxic. This project was developed for *Dirty and Quick* purposes and may produce unexpected side effects—in a sense, it is not entirely harmless.
-3. Cinnabar, a mineral form of mercury sulfide (HgS), is a deep red-colored stone. And ruby is also a deep red stone. Naming a Ruby project "Cinnabar" is particularly fitting.
+1.  硃砂是中國古代道教煉丹師在煉丹時使用的一種原料，就像這個專案在 CI 工作流中充當一種“原料”。
+2.  硃砂有毒。這個專案是為了 **猛、糙、快** (a.k.a. *Dirty and Quick*) 的目的而開發的，可能會產生意料之外的副作用（它並非完全無害）。
+3.  硃砂是一種硫化汞 (HgS) 的礦物，呈深紅色，而 Ruby 也是一種深紅色的寶石。給一個 Ruby 專案取名為 “Cinnabar（硃砂）” 非常貼切。
 
-## Quick Start
+## 快速上手
 
 Github Actions for cinnabar
 
