@@ -5,7 +5,7 @@
 # ----------------
 require_relative 'enter_misc_dir'
 Dir.chdir('../lib')
-final_file = '../lib/cinnabar.rb'
+final_file = 'cinnabar.rb'
 
 exprs =
   Dir['cinnabar/*.rb']
