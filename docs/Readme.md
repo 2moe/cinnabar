@@ -85,7 +85,7 @@ jobs:
     stdout.to_i == 5 #=> true
 ```
 
-#### `.async_run`
+#### `.async_run` + log
 
 ```ruby,yaml
 - run: |
@@ -98,8 +98,10 @@ jobs:
     } .to_argv
       .async_run
 
+    # log_dbg, log_info, log_warn, log_err, log_fatal, log_unk
     "You can now do other things without waiting for
     the process to complete.".log_dbg
+
     stdout, status = task.wait_with_output
     stdout.log_info
     raise "wasi" unless status.success?
