@@ -35,7 +35,7 @@ using Cinnabar::Command::ArrRefin
   "#{green}http://#{ipv4_lan_addr}#{magenta}:8808#{reset}".log_info
 }.call
 
-system 'yardoc'
+['yardoc'].concat(ARGV).run_cmd
 
 {
   yard: (),
@@ -43,4 +43,5 @@ system 'yardoc'
   reload: true,
 }
   .to_argv
+  .concat(ARGV)
   .run_cmd

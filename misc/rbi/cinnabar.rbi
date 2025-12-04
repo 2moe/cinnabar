@@ -18,4 +18,22 @@ class ::Array
     ).returns([IO, Process::Waiter])
   end
   def async_run(env_hash = nil, opts: {}); end
+
+  sig do
+    params(
+      env_hash: T.nilable(Hash),
+      opts: Hash
+    ).returns(T::Boolean)
+  end
+  def run_cmd(env_hash = nil, opts: {}); end
+end
+
+class ::String
+  sig { params(opts: Hash).returns(Integer) }
+  def download(opts = {}); end
+end
+
+class ::Object
+  sig { params(other: Object).returns(T.untyped) }
+  def ▷(other); end # rubocop:disable Naming/MethodName
 end
