@@ -40,7 +40,7 @@ env:
   RUBYOPT: "--disable=gems"
   default_ci_shell: ruby cinnabar/ci.rb {0}
   # optional values: debug, info, warn, error, fatal, unknown
-  RUBY_LOG: "debug"
+  RUBY_LOG: debug
 
 jobs:
   build:
