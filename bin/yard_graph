@@ -1,0 +1,113 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# ------------------------
+# Depends: ruby (>= 3.1), yard (>= 0.9), graphviz (>= 2.42.2)
+#
+# Ruby Runtime Deps:
+#   - argvise
+#   - sinlog
+# ------------------------
+require_relative 'cd_parent_dir'
+
+require 'argvise'
+require 'cinnabar'
+require 'mkmf'
+require 'open3'
+require 'sinlog'
+require 'fileutils'
+
+using Sinlog::Refin
+using Argvise::HashRefin
+using Cinnabar::Command::ArrRefin
+
+def main
+  check_deps
+
+  run_yard_graph
+    .then(&proc_run_dot)
+end
+
+# @return [String] the dot source code
+def run_yard_graph # rubocop:disable Metrics/MethodLength
+  {
+    yardoc: (),
+    # exclude: [''],
+  }
+    .to_argv
+    .run
+
+  out, status = {
+    yard: (),
+    graph: (),
+    full: true,
+    dependencies: true,
+  }
+    .to_argv
+    .tap(&:log_dbg)
+    .then { Open3.capture2(*_1) }
+
+  raise 'Failed to run `yard graph`' unless status.success?
+
+  out
+end
+
+# Build a callable that runs Graphviz `dot` to render SVG from DOT source.
+#
+# @raise [RuntimeError] If `dot -T svg` exits with a non‑zero status.
+#
+# @return [::Proc] `.call(dot_source = String)` => nil
+def proc_run_dot
+  ->(dot_source) do
+    'print dot_source | dot -Tsvg -o ClassDiagram.svg'.log_dbg
+    svg_file =
+      'misc/assets/svg/ClassDiagram.svg'
+        .tap { FileUtils.mkdir_p File.dirname(_1) }
+
+    {
+      dot: (),
+      T: 'svg',
+      o: svg_file,
+    }
+      .to_argv_bsd
+      .then { Open3.capture2(*_1, stdin_data: dot_source) }
+      .then { |_, status| raise 'Failed to run `dot -Tsvg`' unless status.success? }
+  end
+end
+
+# checks package command
+#
+# @return [Boolean]
+def check_pkg_cmd(cmd, pkg: 'nil', is_gem: false) # rubocop:disable Metrics/MethodLength
+  return true unless MakeMakefile.find_executable0(cmd).nil?
+
+  pkg = cmd if pkg.nil?
+
+  "#{pkg} is not installed on your system.
+  You should install #{pkg} manually.".log_warn
+
+  if is_gem
+    "  gem install #{pkg}".log_warn
+    return false
+  end
+
+  <<~INSTALL_PKG
+    Alpine: apk add #{pkg}
+    ArchLinux: pacman -Sy #{pkg}
+    Debian: apt install #{pkg}
+    Fedora: dnf install #{pkg}
+    Gentoo: emerge --ask --usepkg #{pkg}
+    macOS: brew install #{pkg}
+  INSTALL_PKG
+    .log_info
+
+  false
+end
+
+def check_deps
+  check_pkg_cmd('dot', pkg: 'graphviz')
+  check_pkg_cmd('yard', is_gem: true)
+end
+
+# ======
+main

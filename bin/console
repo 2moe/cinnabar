@@ -26,7 +26,7 @@ include Argvise::HashMixin
 
   puts 'You can manually load the following modules:'
   %w[
-    CiDir FunctionPipe CommandRunner Downloader::StrMixin
+    FnPipe::Mixin Command::ArrMixin Downloader::StrMixin
   ].map { "#{green}include #{magenta}Cinnabar::#{blue}#{_1}\n" }
     .each(&:display)
   puts reset

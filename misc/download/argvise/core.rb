@@ -5,7 +5,7 @@
 # ------------------
 # Converts hash to command array
 #
-# == Example
+# @example
 #
 #   { cargo: nil, b: nil, r: true, target: "wasm32-wasip2" }
 #     .then(&Argvise.new_proc)
@@ -15,9 +15,9 @@
 #
 #   #=> ["cargo", "b", "-r", "--target", "wasm32-wasip2"]
 #
-# == Conversion Rules:
+# # Conversion Rules:
 #
-# === GNU Style:
+# ## GNU Style:
 #   - Boolean values:
 #     - `{ verbose: true }` => ["--verbose"]
 #     - `{ v: true }` => ["-v"]
@@ -32,7 +32,7 @@
 #     - `{ L: { env: 'test' } }` => `["-L", "env=test"]`
 #     - `{ label: { env: 'test' } }` => `["--label", "env=test"]`
 #
-# === BSD Style:
+# ## BSD Style:
 #   - Boolean values:
 #     - `{ verbose: true }` => ["-verbose"]
 #     - `{ v: true }` => ["-v"]
@@ -47,12 +47,12 @@
 #     - `{ L: { env: 'test' } }` => `["-L", "env=test"]`
 #     - `{ label: { env: 'test' } }` => `["-label", "env=test"]`
 #
-# === Common:
+# ## Common:
 #   - Raw values:
 #   - `{ cargo: nil, b: nil}` => `["cargo", "b"]`
 #   - `{ "-fv": nil}` => `["-fv"]`
 #
-# === About kebab_case_flags:
+# ## About kebab_case_flags:
 #   - `with_kebab_case_flags(true)`:
 #     - `{enable_jit: true}` =>
 #         - GNU-style: `["--enable-jit"]`
@@ -70,18 +70,17 @@ class Argvise
   class << self
     # Converts a hash into a command-line argument array
     #
-    # == Example
+    # @example
     #   require 'argvise'
     #   cmd = { ruby: nil, r: "argvise", verbose: true, e: true, "puts Argvise::VERSION": nil }
     #   opts = { bsd_style: false }
     #   Argvise.build(cmd, opts:)
     #
-    # == Params
-    #   - raw_cmd_hash [Hash] The hash to be converted (i.e., raw input data)
-    #   - opts [Hash] See also: [self.new]
+    # @param raw_cmd_hash [Hash] The hash to be converted (i.e., raw input data)
+    # @param opts [Hash]
+    # @see #initialize
     #
-    # == Returns
-    #   [Array<String>] The generated array of command-line arguments
+    # @return [Array<String>] The generated array of command-line arguments
     def build(
       raw_cmd_hash,
       opts: nil
@@ -94,15 +93,16 @@ class Argvise
     #
     # Useful for transforming a hash of CLI arguments into a command array.
     #
-    # == Example
+    # @example
     #
-    #   require 'argvise'
-    #   { ruby: nil, r: "argvise", e: true, "puts Argvise::VERSION": nil }
-    #     .then(&Argvise.new_proc)
-    #     .build
-    #     .then{system *_1}
+    #     require 'argvise'
+    #     { ruby: nil, r: "argvise", e: true, "puts Argvise::VERSION": nil }
+    #       .then(&Argvise.new_proc)
+    #       .build
+    #       .then{system *_1}
     #
-    # > See also: [self.new]
+    # @see #initialize
+    # @return [::Proc] `.call(raw_cmd_hash)` => self
     def new_proc
       ->(raw_cmd_hash) do
         new(raw_cmd_hash)
@@ -111,15 +111,16 @@ class Argvise
     # ----
   end
 
-  # == Example
+  # @example
   #
   #   require 'argvise'
   #   cmd = { ruby: nil, r: "argvise", verbose: true, e: true, "puts Argvise::VERSION": nil }
   #   opts = Argvise::DEFAULT_OPTS
   #   Argvise.new(cmd, opts:).build.then{system *_1}
   #
-  # == opts
-  #   [Hash]: { bsd_style: Boolean, kebab_case_flags: Boolean }
+  # @param opts [Hash]: { bsd_style: Boolean, kebab_case_flags: Boolean }
+  #
+  # ## opts
   #
   # - When `bsd_style` is set to `false`, the builder operates in **GNU-style mode**,
   #   which typically uses hyphenated flags.
@@ -128,12 +129,11 @@ class Argvise
   #   will be automatically converted to hyphens (`-`).
   #   - For example, a flag like `--enable_jit` will be transformed into `--enable-jit`.
   #
-  # When the value of a flag key is `nil`, the `kebab_case_flags` option has no effect
+  # When the value of a flag key is `nil`, the `kebab_case_flags` option has no effect.
   # — i.e., the key will not be transformed.
   #
   # For example, the input `{"a_b-c": nil}` will result in `["a_b-c"]`,
   # and **not** be automatically transformed into `["a-b-c"]`.
-  #
   def initialize(
     raw_cmd_hash,
     opts: nil
@@ -145,16 +145,21 @@ class Argvise
     @kebab_case_flags = opts[:kebab_case_flags]
   end
 
+  # Default: true
+  # @return [self]
   def with_bsd_style(value = true) # rubocop:disable Style/OptionalBooleanParameter
     @bsd_style = value
     self
   end
 
+  # Default: true
+  # @return [self]
   def with_kebab_case_flags(value = true) # rubocop:disable Style/OptionalBooleanParameter
     @kebab_case_flags = value
     self
   end
 
+  # @return [Array<String>]
   def build
     # @raw_cmd_hash.each_pair.flat_map { |k, v| process_pair(k.to_s, v) }
     @raw_cmd_hash.each_with_object([]) do |(k, v), memo|
@@ -185,13 +190,13 @@ class Argvise
   #  - short key, e.g., {verbose: true} => "-verbose"
   #  - no long key
   #
-  # @kebab_case_flags==true:
+  # kebab_case_flags==true:
   #  - "_" => "-"
   #  - e.g., {enable_jit: true} =>
   #    - BSD-style: "-enable-jit"
   #    - GNU-style: "--enable-jit"
   #
-  # @kebab_case_flags==false:
+  # kebab_case_flags==false:
   #  - e.g., {enable_jit: true} =>
   #    - BSD-style: "-enable_jit"
   #    - GNU-style: "--enable_jit"
@@ -254,10 +259,16 @@ class Argvise
 end
 
 class Argvise
-  module HashExt # rubocop:disable Style/Documentation
+  # The foundation of {HashRefin} and {HashMixin}
+  module HashExt
     # Converts a hash map into GNU-style command-line arguments.
     #
-    # == Example：
+    # @param opts [Hash, nil] See also `Argvise.new`
+    #
+    # @see Argvise#initialize
+    # @see to_argv_bsd
+    #
+    # @example Basic usage
     #
     #     require 'argvise'
     #     using Argvise::HashRefin
@@ -265,11 +276,8 @@ class Argvise
     #     { v: true, path: '/path/to/dir' }.to_argv
     #     #=> ["-v", "--path", "/path/to/dir"]
     #
-    # == params:
     #
-    # - opts: See also [Argvise::new]
-    #
-    # == raw_cmd_hash.to_argv is equivalent to:
+    # @example raw_cmd_hash.to_argv is equivalent to:
     #
     #     raw_cmd_hash
     #       .then(&Argvise.new_proc)
@@ -277,15 +285,16 @@ class Argvise
     #       .with_kebab_case_flags(true)
     #       .build
     #
-    # ---
-    # sig { params(opts: T.nilable(Hash)).returns(T::Array[String]) }
+    # @return [Array<String>]
     def to_argv(opts = nil)
       Argvise.build(self, opts:)
     end
 
     # Converts a hash map into BSD-style command-line arguments.
     #
-    # == Example：
+    # @param opts [Hash]
+    # @see to_argv
+    # @example
     #
     #     require 'argvise'
     #     using Argvise::HashRefin
@@ -293,6 +302,7 @@ class Argvise
     #     { path: '/path/to/dir' }.to_argv_bsd
     #     #=> ["-path", "/path/to/dir"]
     #
+    # @return [Array<String>]
     def to_argv_bsd(options = {})
       # if options is not Hash Type => {}
       options = {} unless options.is_a?(::Hash)
@@ -304,7 +314,12 @@ class Argvise
 
   # Converts a hash map into command-line arguments.
   #
-  # == Example：
+  # Monkey Patching:
+  #
+  # - Hash#to_argv
+  # - Hash#to_argv_bsd
+  #
+  # @example
   #
   #     require 'argvise'
   #

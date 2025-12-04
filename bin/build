@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-# typed: ignore
 # frozen_string_literal: true
 
 # -----------------
@@ -9,9 +8,7 @@
 require 'rubygems'
 require 'pathname'
 
-Pathname(__dir__)
-  .parent
-  .then { Dir.chdir(it) }
+require_relative 'cd_parent_dir'
 
 proj = 'cinnabar'
 

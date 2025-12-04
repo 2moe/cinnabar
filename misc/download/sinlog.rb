@@ -51,11 +51,13 @@ module Sinlog; end
 
 require_relative 'sinlog/version'
 
-require_relative 'sinlog/consts'
-require_relative 'sinlog/logger'
-require_relative 'sinlog/module_fn'
+require_relative 'sinlog/01_consts'
+require_relative 'sinlog/02_logger'
+require_relative 'sinlog/03_module_fn'
 
-require_relative 'sinlog/log_ext'
-require_relative 'sinlog/short_ext'
+require_relative 'sinlog/04_log_ext'
+require_relative 'sinlog/05_short_ext'
 
-require_relative 'sinlog/loggable'
+require_relative 'sinlog/06_loggable'
+require_relative 'sinlog/07_proc'
+require_relative 'sinlog/08_module_short_ext'

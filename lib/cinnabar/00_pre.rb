@@ -2,9 +2,9 @@
 
 # Define Cinnabar first to prevent errors when creating Cinnabar::SubMod
 # (compact ClassAndModuleChildren)
-#
 # ------------------
 
+# @see https://github.com/2moe/cinnabar
 module Cinnabar; end
 
 # To ensure compatibility with "--disable=gems" (allowing users to pre-require),

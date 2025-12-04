@@ -24,6 +24,12 @@ A:
 2. Cinnabar is toxic. This project was developed for *Dirty and Quick* purposes and may produce unexpected side effects—in a sense, it is not entirely harmless.
 3. Cinnabar, a mineral form of mercury sulfide (HgS), is a deep red-colored stone. And ruby is also a deep red stone. Naming a Ruby project "Cinnabar" is particularly fitting.
 
+## API DOC
+
+![ClassDiagram](../misc/assets/svg/ClassDiagram.svg)
+
+- Github Pages: <https://2moe.github.io/cinnabar>
+
 ## Quick Start
 
 Github Actions for cinnabar
@@ -33,6 +39,8 @@ env:
   # Speeds up script startup by disabling RubyGems
   RUBYOPT: "--disable=gems"
   default_ci_shell: ruby cinnabar/ci.rb {0}
+  # optional values: debug, info, warn, error, fatal
+  RUBY_LOG: "debug"
 
 jobs:
   build:
@@ -61,4 +69,21 @@ jobs:
           }
             .to_argv
             .run
+```
+
+## Examples
+
+### Command Runner
+
+```yaml
+- run: |
+    {
+      cargo: (),
+      build: (),
+      profile: 'release',
+      verbose: true,
+      target: 'x86_64-unknown-linux-musl'
+    }
+      .to_argv
+      .run
 ```

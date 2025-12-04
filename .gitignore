@@ -23,6 +23,7 @@ Thumbs.db:encryptable
 !/lib
 !/bin
 !/misc
+!/.yardopts
 !/*.gemspec
 # !/examples
 # !/tests

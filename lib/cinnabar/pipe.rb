@@ -29,7 +29,7 @@ module Cinnabar::FnPipe
   #
   # Monkey Patching: Object#▷
   #
-  # = Example
+  # @example
   #
   #     include Cinnabar::FnPipe::Mixin
   #
@@ -47,7 +47,7 @@ module Cinnabar::FnPipe
   #
   # Refinement: Object#▷
   #
-  # = Example
+  # @example
   #
   #     using Cinnabar::FnPipe::Refin
   #

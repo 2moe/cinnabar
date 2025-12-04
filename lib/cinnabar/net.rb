@@ -5,18 +5,31 @@ module Cinnabar::Downloader
 
   require 'open-uri'
 
-  # == Example
+  DEFAULT_DL_OPTS = {
+    out_dir: 'tmp', file_name: nil,
+  }.freeze
+
+  # @example
   #
   #     url = 'https://docs.ruby-lang.org/en/3.4/OpenURI.html'
   #     opts = { out_dir: "tmp", file_name: "doc.html" }
   #     DL = Cinnabar::Downloader
   #     DL.download(url, opts)
   #
-  # == Params
+  # @param url [String] e.g., **https://url.local**
   #
-  # - url: [String] e.g., https://url.local
-  # - opts: [Hash] e.g., `{out_dir: 'download', file_name: nil, headers: {'User-Agent' => "aria2/1.37.0"}}`
-  def download(url, opts)
+  # @param opts [Hash] Options for customizing the download behavior.
+  #   e.g., `{out_dir: 'download', file_name: nil, headers: {'User-Agent' => "aria2/1.37.0"}}`
+  #
+  # @option opts [String] :out_dir
+  #   Directory where the downloaded file will be saved.
+  # @option opts [String, nil] :file_name
+  #   Name of the output file. If nil, it will be inferred from the URL.
+  # @option opts [Hash{String => String}] :headers
+  #   Optional HTTP headers to include in the request.
+  # @return [Integer]
+  def download(url, opts = {})
+    opts = DEFAULT_DL_OPTS.merge(opts)
     out_dir, file_name, headers = opts.values_at(:out_dir, :file_name, :headers)
 
     headers = build_headers(headers)
@@ -30,7 +43,7 @@ module Cinnabar::Downloader
       .then { IO.copy_stream(_1, file_path.to_s) }
   end
 
-  # => ::Hash
+  # @return [Hash]
   def build_headers(headers)
     base_headers = {
       'User-Agent' => 'Mozilla/5.0 (Linux; aarch64 Wayland; rv:138.0) Gecko/20100101 Firefox/138.0',
@@ -38,7 +51,7 @@ module Cinnabar::Downloader
     base_headers.merge(headers || {}).transform_keys(&:to_s)
   end
 
-  # => ::String
+  # @return [String]
   def determine_filename(file_name, parsed_url)
     filename = file_name || File.basename(parsed_url.path || '')
     case filename.strip
@@ -47,7 +60,7 @@ module Cinnabar::Downloader
     end
   end
 
-  # => Kernel.Pathname
+  # @return [Pathname]
   def setup_file_path(out_dir, file_name)
     Kernel.Pathname(out_dir)
       .tap(&:mkpath)
@@ -64,7 +77,7 @@ module Cinnabar::Downloader
 
   # -------------
 
-  # = Example
+  # @example
   #
   #     include Cinnabar::Downloader::StrMixin
   #
@@ -76,7 +89,7 @@ module Cinnabar::Downloader
     def self.included(_host) = ::String.include StringExt
   end
 
-  # = Example
+  # @example
   #
   #     using Cinnabar::Downloader::StrRefin
   #

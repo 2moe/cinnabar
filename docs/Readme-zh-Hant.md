@@ -24,41 +24,8 @@
 2.  硃砂有毒。這個專案是為了 **猛、糙、快** (a.k.a. *Dirty and Quick*) 的目的而開發的，可能會產生意料之外的副作用（它並非完全無害）。
 3.  硃砂是一種硫化汞 (HgS) 的礦物，呈深紅色，而 Ruby 也是一種深紅色的寶石。給一個 Ruby 專案取名為 “Cinnabar（硃砂）” 非常貼切。
 
-## 快速上手
+## API DOC
 
-Github Actions for cinnabar
+![ClassDiagram](../misc/assets/svg/ClassDiagram.svg)
 
-```yaml
-env:
-  # Speeds up script startup by disabling RubyGems
-  RUBYOPT: "--disable=gems"
-  default_ci_shell: ruby cinnabar/ci.rb {0}
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: ${{env.default_ci_shell}}
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: clone cinnabar
-        uses: actions/checkout@v6
-        with:
-          repository: 2moe/cinnabar
-          path: cinnabar
-          ref: v0.0.0
-
-      - name: (example) run cargo command
-        run: |
-          {
-            cargo: (),
-            build: (),
-            profile: 'release',
-            verbose: true,
-            target: 'x86_64-unknown-linux-musl'
-          }
-            .to_argv
-            .run
-```
+- Github Pages: <https://2moe.github.io/cinnabar>

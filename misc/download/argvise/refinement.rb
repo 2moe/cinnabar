@@ -2,14 +2,18 @@
 # frozen_string_literal: true
 
 # To maintain `mruby` compatibility, define `private_constant` and
-#  `refinements` in this file rather than in **core.rb**.
+#  `refinements` in **refinement.rb** rather than in **core.rb**.
 
-class Argvise
-  private_constant :HashExt
+class Argvise # rubocop:disable Style/ClassAndModuleChildren
+  # Probably no need to mark this as private.
+  # private_constant :HashExt
 
-  # Refinements: Hash#to_argv, Hash#to_argv_bsd
+  # Refinements:
   #
-  # = Example
+  # - Hash#to_argv
+  # - Hash#to_argv_bsd
+  #
+  # @example
   #
   #     require 'argvise'
   #     class A
@@ -21,7 +25,7 @@ class Argvise
   #         puts({ target: "wasm32-wasip2" }.to_argv_bsd)
   #           # => ["-target", "wasm32-wasip2"]
   #
-  #         {}.respond_to?(:to_argv) #=> true
+  #         puts({}.respond_to?(:to_argv)) #=> true
   #       end
   #     end
   #
