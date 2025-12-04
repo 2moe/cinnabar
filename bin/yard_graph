@@ -13,7 +13,6 @@ require_relative 'cd_parent_dir'
 require 'argvise'
 require 'cinnabar'
 require 'mkmf'
-require 'open3'
 require 'sinlog'
 require 'fileutils'
 
@@ -44,7 +43,6 @@ def run_yard_graph # rubocop:disable Metrics/MethodLength
     dependencies: true,
   }
     .to_argv
-    .tap(&:log_dbg)
     .run
 end
 
