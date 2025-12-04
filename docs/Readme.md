@@ -121,7 +121,7 @@ jobs:
     # opts = { stdin_data:, stdin_binmode: false }
     opts = { stdin_data: }
 
-    accel = %w[kvm hvf tcg].join ':'
+    accel = %w[kvm hvf whpx].join ':'
     task = {
       'qemu-system-x86_64': (),
       machine: "accel=#{accel}",
