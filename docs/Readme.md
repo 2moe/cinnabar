@@ -98,6 +98,8 @@ jobs:
     } .to_argv
       .async_run
 
+    "You can now do other things without waiting for
+    the process to complete.".log_dbg
     stdout, status = task.wait_with_output
     stdout.log_info
     raise "wasi" unless status.success?
