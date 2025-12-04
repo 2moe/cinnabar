@@ -75,62 +75,80 @@ jobs:
 
 ### Command Runner
 
-#### `.run_async`
-
-```ruby,yaml
-- run: |
-    'building wasi file...'.log_dbg
-
-    out_fd, waiter = {
-      cargo: (),
-      b: (),
-      r: true,
-      target: 'wasm32-wasip2'
-    }
-      .to_argv
-      .run_async
-
-    stdout, status = Cinnabar::Command.wait_with_output(out_fd, waiter)
-    stdout.log_info
-    raise "wasi" unless status.success?
-```
-
-#### `.run_async` + pass stdin data
-
-```ruby,yaml
-- run: |
-    opts = {stdin_data: "Run in the background" }
-
-    io_and_waiter =
-      %w[wc -m].async_run(opts:)
-        .then { Cinnabar::Command.wait_with_output *_1 }
-```
-
-
 #### `.run` + pass stdin data
 
 ```ruby,yaml
 - run: |
-    qmp_data = <<~'QMP_JSON'
+    opts = { stdin_data: "Hello", allow_failure: true }
+    stdout = %w[wc -m].run(opts:)
+
+    stdout.to_i == 5 #=> true
+```
+
+#### `.async_run`
+
+```ruby,yaml
+- run: |
+    'building wasi file...'.log_dbg
+    task = {
+      cargo: (),
+      b: (),
+      r: true,
+      target: 'wasm32-wasip2'
+    } .to_argv
+      .async_run
+
+    stdout, status = task.wait_with_output
+    stdout.log_info
+    raise "wasi" unless status.success?
+```
+
+#### `.async_run` + pass stdin data
+
+```ruby,yaml
+- run: |
+    stdin_data = <<~'QMP_JSON'
       { "execute":"qmp_capabilities" }
       { "execute":"query-cpu-model-expansion",
         "arguments":{"type":"full","model":{"name":"host"}} }
       { "execute":"quit" }
     QMP_JSON
 
-    accel = %w[kvm hvf tcg].join ':'
-    opts = { stdin_data: qmp_data, allow_failure: true }
+    # opts = { stdin_data:, stdin_binmode: false }
+    opts = { stdin_data: }
 
-    stdout = {
-      'qemu-system-aarch64': (),
-      machine: "none,accel=#{accel}",
+    accel = %w[kvm hvf tcg].join ':'
+    task = {
+      'qemu-system-x86_64': (),
+      machine: "accel=#{accel}",
       cpu: 'host',
       display: 'none',
       nodefaults: true,
       no_user_config: true,
       qmp: 'stdio',
     } .to_argv_bsd
-      .run(opts:)
+      .async_run(opts:)
 
-    "stdout: #{stdout}".log_info
+    stdout, status = task.wait_with_output
+    stdout.log_info if status.success?
+```
+
+### Downloader
+
+```ruby,yaml
+- run: |
+    url = 'https://docs.ruby-lang.org/en/master'
+    url.download
+    # OR: url.download({out_dir: "/tmp", file_name: "index.html"})
+```
+
+### Function Pipe
+
+```ruby,yaml
+- run: |
+    upper = ->s { s.upcase }
+
+    'Foo'
+      .▷(upper)
+      .▷ :puts #=> "FOO"
 ```

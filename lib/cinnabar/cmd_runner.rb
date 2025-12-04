@@ -212,6 +212,8 @@ module Cinnabar::Command
     stdin_binmode = opts.delete(:stdin_binmode)
     stdout_binmode = opts.delete(:stdout_binmode)
 
+    'async_run() does not support the :allow_failure option.'.log_warn if opts.delete(:allow_failure)
+
     final_env = normalize_env(env_hash)
 
     stdin, stdout, waiter =

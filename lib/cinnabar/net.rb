@@ -31,6 +31,7 @@ module Cinnabar::Downloader
   def download(url, opts = {})
     opts = DEFAULT_DL_OPTS.merge(opts)
     out_dir, file_name, headers = opts.values_at(:out_dir, :file_name, :headers)
+    out_dir = '.' if out_dir.nil?
 
     headers = build_headers(headers)
     parsed_url = Kernel.URI(url)
@@ -69,9 +70,19 @@ module Cinnabar::Downloader
 end
 
 module Cinnabar::Downloader
+  # The foundation of {StrRefin} and {StrMixin}
   module StrExt
-    def download(out_dir: 'tmp', file_name: nil, headers: {})
-      Cinnabar::Downloader.download(self, { out_dir:, file_name:, headers: })
+    # @see Cinnabar::Downloader.download
+    #
+    # @param opts [Hash] Options for customizing the download behavior.
+    #   e.g., `{out_dir: 'download', file_name: nil, headers: {'User-Agent' => "aria2/1.37.0"}}`
+    #
+    # @option opts [String] :out_dir
+    # @option opts [String, nil] :file_name
+    # @option opts [Hash{String => String}] :headers
+    # @return [Integer]
+    def download(opts = {})
+      Cinnabar::Downloader.download(self, opts)
     end
   end
 
@@ -81,10 +92,13 @@ module Cinnabar::Downloader
   #
   #     include Cinnabar::Downloader::StrMixin
   #
-  #     url = 'https://docs.ruby-lang.org'
+  #     url = 'https://docs.ruby-lang.org/en/master'
   #
   #     url.download
-  #     # OR: url.download(out_dir: "tmp", file_name: "custom.html")
+  #     # OR: url.download({out_dir: "tmp", file_name: "custom.html"})
+  #
+  # @see Cinnabar::Downloader.download
+  # @see StrExt
   module StrMixin
     def self.included(_host) = ::String.include StrExt
   end
@@ -93,10 +107,13 @@ module Cinnabar::Downloader
   #
   #     using Cinnabar::Downloader::StrRefin
   #
-  #     url = 'https://docs.ruby-lang.org/en/master/OpenURI.html'
+  #     url = 'https://docs.ruby-lang.org/en/master'
   #
   #     url.download
-  #     # OR: url.download(out_dir: "/tmp", file_name: "index.html")
+  #     # OR: url.download({out_dir: "/tmp", file_name: "index.html"})
+  #
+  # @see Cinnabar::Downloader.download
+  # @see StrExt
   module StrRefin
     refine ::String do
       import_methods StrExt
