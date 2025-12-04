@@ -31,7 +31,7 @@ end
 def run_yard_graph # rubocop:disable Metrics/MethodLength
   {
     yardoc: (),
-    # exclude: [''],
+    # exclude: ['lib/sinlog/(.*?log_ext|.*?short_ext).rb'],
   }
     .to_argv
     .run_cmd

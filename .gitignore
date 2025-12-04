@@ -19,6 +19,7 @@ Thumbs.db:encryptable
 !/License
 !/docs
 !/ci.rb
+!/ci
 !/.rubocop.yml
 !/lib
 !/bin
