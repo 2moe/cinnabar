@@ -42,4 +42,4 @@ system 'yardoc'
   reload: true,
 }
   .to_argv
-  .run
+  .run_cmd
