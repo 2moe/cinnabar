@@ -69,7 +69,7 @@ module Cinnabar::Downloader
 end
 
 module Cinnabar::Downloader
-  module StringExt
+  module StrExt
     def download(out_dir: 'tmp', file_name: nil, headers: {})
       Cinnabar::Downloader.download(self, { out_dir:, file_name:, headers: })
     end
@@ -86,7 +86,7 @@ module Cinnabar::Downloader
   #     url.download
   #     # OR: url.download(out_dir: "tmp", file_name: "custom.html")
   module StrMixin
-    def self.included(_host) = ::String.include StringExt
+    def self.included(_host) = ::String.include StrExt
   end
 
   # @example
@@ -99,7 +99,7 @@ module Cinnabar::Downloader
   #     # OR: url.download(out_dir: "/tmp", file_name: "index.html")
   module StrRefin
     refine ::String do
-      import_methods StringExt
+      import_methods StrExt
     end
   end
 end

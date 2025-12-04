@@ -17,7 +17,7 @@ module Cinnabar::FnPipe
 end
 
 module Cinnabar::FnPipe
-  module ObjectExt
+  module Ext
     def ▷(other) # rubocop:disable Naming/MethodName
       Cinnabar::FnPipe.▷(self, other)
     end
@@ -40,7 +40,7 @@ module Cinnabar::FnPipe
   #     2.▷ :puts
   #         #=> 2
   module Mixin
-    def self.included(_host) = ::Object.include ObjectExt
+    def self.included(_host) = ::Object.include Ext
   end
 
   # Function Pipe
@@ -63,7 +63,7 @@ module Cinnabar::FnPipe
   #
   module Refin
     refine ::Object do
-      import_methods ObjectExt
+      import_methods Ext
     end
   end
 end

@@ -39,7 +39,7 @@ env:
   # Speeds up script startup by disabling RubyGems
   RUBYOPT: "--disable=gems"
   default_ci_shell: ruby cinnabar/ci.rb {0}
-  # optional values: debug, info, warn, error, fatal
+  # optional values: debug, info, warn, error, fatal, unknown
   RUBY_LOG: "debug"
 
 jobs:
@@ -56,7 +56,7 @@ jobs:
         with:
           repository: 2moe/cinnabar
           path: cinnabar
-          ref: v0.0.0
+          ref: v0.0.1
 
       - name: (example) run cargo command
         run: |
@@ -68,22 +68,69 @@ jobs:
             target: 'x86_64-unknown-linux-musl'
           }
             .to_argv
-            .run
+            .run_cmd
 ```
 
 ## Examples
 
 ### Command Runner
 
-```yaml
+#### `.run_async`
+
+```ruby,yaml
 - run: |
-    {
+    'building wasi file...'.log_dbg
+
+    out_fd, waiter = {
       cargo: (),
-      build: (),
-      profile: 'release',
-      verbose: true,
-      target: 'x86_64-unknown-linux-musl'
+      b: (),
+      r: true,
+      target: 'wasm32-wasip2'
     }
       .to_argv
-      .run
+      .run_async
+
+    stdout, status = Cinnabar::Command.wait_with_output(out_fd, waiter)
+    stdout.log_info
+    raise "wasi" unless status.success?
+```
+
+#### `.run_async` + pass stdin data
+
+```ruby,yaml
+- run: |
+    opts = {stdin_data: "Run in the background" }
+
+    io_and_waiter =
+      %w[wc -m].async_run(opts:)
+        .then { Cinnabar::Command.wait_with_output *_1 }
+```
+
+
+#### `.run` + pass stdin data
+
+```ruby,yaml
+- run: |
+    qmp_data = <<~'QMP_JSON'
+      { "execute":"qmp_capabilities" }
+      { "execute":"query-cpu-model-expansion",
+        "arguments":{"type":"full","model":{"name":"host"}} }
+      { "execute":"quit" }
+    QMP_JSON
+
+    accel = %w[kvm hvf tcg].join ':'
+    opts = { stdin_data: qmp_data, allow_failure: true }
+
+    stdout = {
+      'qemu-system-aarch64': (),
+      machine: "none,accel=#{accel}",
+      cpu: 'host',
+      display: 'none',
+      nodefaults: true,
+      no_user_config: true,
+      qmp: 'stdio',
+    } .to_argv_bsd
+      .run(opts:)
+
+    "stdout: #{stdout}".log_info
 ```

@@ -76,15 +76,17 @@ module Cinnabar::Command
   #
   # @param cmd_arr [Array<String>] The command and its arguments as an array,
   #   e.g., `%w[ls -lh]`.
-  # @param allow_failure [Boolean] Indicates whether the command is allowed to fail.
-  #   If true, the method will return false instead of raising an exception when the
-  #   command exits with a non-zero status.
   #
   # @param env_hash [#to_h] Environment variables to pass to the command.
   # @param opts [Hash]
   #
   #   - Only the `:allow_failure` is extracted and handled explicitly;
   #   - all other keys are passed through to `Kernel.system` unchanged.
+  #
+  # @option opts [Boolean] :allow_failure
+  #   Indicates whether the command is allowed to fail.
+  #   If true, the method will return false instead of raising an exception when the
+  #   command exits with a non-zero status.
   #
   # @see https://docs.ruby-lang.org/en/3.4/Process.html#module-Process-label-Execution+Options
   #
@@ -104,7 +106,7 @@ module Cinnabar::Command
   # @return [Boolean] Returns true if the command succeeds (exit status 0),
   #   or false if it fails and `allow_failure` is true.
   # @raise [RuntimeError] Raises an error if the command fails and `allow_failure` is false.
-  def run_cmd(cmd_arr, env_hash = nil, opts: {}) # rubocop:disable Style/OptionalBooleanParameter
+  def run_cmd(cmd_arr, env_hash = nil, opts: {})
     'Running system command'.log_dbg
     cmd_arr.log_info
     "opts: #{opts}".log_dbg
@@ -293,7 +295,7 @@ module Cinnabar::Command
   # @see Cinnabar::Command.run
   # @see Cinnabar::Command.async_run
   # @see Cinnabar::Command.run_cmd
-  module ArrayExt
+  module ArrExt
     # Executes the command synchronously (blocking) and returns its standard output.
     #
     # @note self [`Array<String>`]: The command and its arguments (e.g., `%w[printf hello]`).
@@ -362,8 +364,11 @@ module Cinnabar::Command
     #     using Cinnabar::Command::ArrRefin
     #
     #     env_hash = {WW: 2}
-    #     cmd_arr = %w[sh -c] << 'printf $WW'
-    #     status = cmd_arr.run_cmd(env_hash)
+    #     status =
+    #        %w[sh -c]
+    #          .push('printf $WW')
+    #          .run_cmd(env_hash)
+    #
     #     status == true
     #
     # @return [Boolean]
@@ -400,17 +405,18 @@ module Cinnabar::Command
   # @example async_run + wait_with_output
   #
   #     include Cinnabar::Command::ArrMixin
+  #     include Cinnabar::Command::TaskArrMixin
   #
-  #     fd_and_waiter = %w[ruby -e].push('sleep 2; puts "OK"').async_run
+  #     task = %w[ruby -e].push('sleep 2; puts "OK"').async_run
   #
-  #     output, status = Cinnabar::Command.wait_with_output(*fd_and_waiter)
+  #     output, status = task.wait_with_output
   #
   #     status.success?  #=> true
   #     output.chomp == 'OK' #=> true
   #
-  # @see ArrayExt
+  # @see ArrExt
   module ArrMixin
-    def self.included(_host) = ::Array.include ArrayExt
+    def self.included(_host) = ::Array.include ArrExt
   end
 
   # Refinements: Array#run, Array#async_run, Array#run_cmd
@@ -443,8 +449,9 @@ module Cinnabar::Command
   #
   #     using Argvise::HashRefin
   #     using Cinnabar::Command::ArrRefin
+  #     using Cinnabar::Command::TaskArrRefin
   #
-  #     out_fd, waiter = {
+  #     task = {
   #       cargo: (),
   #       b: (),
   #       r: true,
@@ -453,13 +460,50 @@ module Cinnabar::Command
   #       .to_argv
   #       .run_async
   #
-  #     stdout, status = Cinnabar::Command.wait_with_output(out_fd, waiter)
+  #     stdout, status = task.wait_with_output
   #     status.success? #=> true
   #
-  # @see ArrayExt
+  # @see ArrExt
   module ArrRefin
     refine ::Array do
-      import_methods ArrayExt
+      import_methods ArrExt
     end
+  end
+end
+
+module Cinnabar::Command
+  # The foundation of {TaskArrRefin} and {TaskArrMixin}
+  # @see Cinnabar::Command.wait_with_output
+  #
+  # @example simple
+  #
+  #     using Cinnabar::Command::ArrRefin
+  #     using Cinnabar::Command::TaskArrRefin
+  #     # OR: include Cinnabar::Command::TaskArrMixin
+  #
+  #     task = %w[ruby -e]
+  #             .push('sleep 2; puts "OK"')
+  #             .async_run
+  #
+  #     stdout, status = task.wait_with_output
+  #     status.success? #=> true
+  module TaskArrExt
+    def wait_with_output
+      Cinnabar::Command.wait_with_output(*self)
+    end
+  end
+
+  # Refinement: Array#wait_with_output
+  # @see TaskArrExt
+  module TaskArrRefin
+    refine ::Array do
+      import_methods TaskArrExt
+    end
+  end
+
+  # Monkey Patching: Array#wait_with_output
+  # @see TaskArrExt
+  module TaskArrMixin
+    def self.included(_host) = ::Array.include TaskArrExt
   end
 end

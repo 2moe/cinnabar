@@ -12,8 +12,9 @@ require_relative 'misc/download/argvise'
 require_relative 'lib/cinnabar'
 
 include Cinnabar::FnPipe::Mixin
-include Cinnabar::Command::ArrMixin
 include Cinnabar::Downloader::StrMixin
+include Cinnabar::Command::ArrMixin
+include Cinnabar::Command::TaskArrMixin
 
 include Sinlog::Mixin
 include Argvise::HashMixin

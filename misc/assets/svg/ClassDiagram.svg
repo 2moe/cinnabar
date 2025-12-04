@@ -66,11 +66,11 @@
 <text xml:space="preserve" text-anchor="start" x="1659.38" y="-49.7" font-family="Times,serif" font-size="14.00">+ run : String</text>
 <text xml:space="preserve" text-anchor="start" x="1659.38" y="-32.45" font-family="Times,serif" font-size="14.00">+ wait_with_output : Array(String, Process::Status)</text>
 </g>
-<!-- Cinnabar_Command_ArrayExt -->
+<!-- Cinnabar_Command_ArrExt -->
 <g id="node4" class="node">
-<title>Cinnabar_Command_ArrayExt</title>
+<title>Cinnabar_Command_ArrExt</title>
 <polygon fill="none" stroke="black" points="111.5,-41.75 111.5,-134.75 427.5,-134.75 427.5,-41.75 111.5,-41.75"/>
-<text xml:space="preserve" text-anchor="middle" x="269.5" y="-117.45" font-family="Times,serif" font-size="14.00">module ArrayExt</text>
+<text xml:space="preserve" text-anchor="middle" x="269.5" y="-117.45" font-family="Times,serif" font-size="14.00">module ArrExt</text>
 <polyline fill="none" stroke="black" points="111.5,-109.5 427.5,-109.5"/>
 <text xml:space="preserve" text-anchor="middle" x="269.5" y="-92.2" font-family="Times,serif" font-size="14.00"> </text>
 <polyline fill="none" stroke="black" points="111.5,-84.25 427.5,-84.25"/>
@@ -107,11 +107,11 @@
 <polyline fill="none" stroke="black" points="2053.88,-75.62 2177.12,-75.62"/>
 <text xml:space="preserve" text-anchor="start" x="2061.88" y="-58.33" font-family="Times,serif" font-size="14.00">+ ▷</text>
 </g>
-<!-- Cinnabar_FnPipe_ObjectExt -->
+<!-- Cinnabar_FnPipe_Ext -->
 <g id="node8" class="node">
-<title>Cinnabar_FnPipe_ObjectExt</title>
+<title>Cinnabar_FnPipe_Ext</title>
 <polygon fill="none" stroke="black" points="757.38,-50.38 757.38,-126.12 901.62,-126.12 901.62,-50.38 757.38,-50.38"/>
-<text xml:space="preserve" text-anchor="middle" x="829.5" y="-108.83" font-family="Times,serif" font-size="14.00">module ObjectExt</text>
+<text xml:space="preserve" text-anchor="middle" x="829.5" y="-108.83" font-family="Times,serif" font-size="14.00">module Ext</text>
 <polyline fill="none" stroke="black" points="757.38,-100.88 901.62,-100.88"/>
 <text xml:space="preserve" text-anchor="middle" x="829.5" y="-83.58" font-family="Times,serif" font-size="14.00"> </text>
 <polyline fill="none" stroke="black" points="757.38,-75.62 901.62,-75.62"/>
@@ -150,11 +150,11 @@
 <text xml:space="preserve" text-anchor="start" x="2203.12" y="-49.7" font-family="Times,serif" font-size="14.00">+ download : Integer</text>
 <text xml:space="preserve" text-anchor="start" x="2203.12" y="-32.45" font-family="Times,serif" font-size="14.00">+ setup_file_path : Pathname</text>
 </g>
-<!-- Cinnabar_Downloader_StringExt -->
+<!-- Cinnabar_Downloader_StrExt -->
 <g id="node12" class="node">
-<title>Cinnabar_Downloader_StringExt</title>
+<title>Cinnabar_Downloader_StrExt</title>
 <polygon fill="none" stroke="black" points="1185.12,-50.38 1185.12,-126.12 1327.88,-126.12 1327.88,-50.38 1185.12,-50.38"/>
-<text xml:space="preserve" text-anchor="middle" x="1256.5" y="-108.83" font-family="Times,serif" font-size="14.00">module StringExt</text>
+<text xml:space="preserve" text-anchor="middle" x="1256.5" y="-108.83" font-family="Times,serif" font-size="14.00">module StrExt</text>
 <polyline fill="none" stroke="black" points="1185.12,-100.88 1327.88,-100.88"/>
 <text xml:space="preserve" text-anchor="middle" x="1256.5" y="-83.58" font-family="Times,serif" font-size="14.00"> </text>
 <polyline fill="none" stroke="black" points="1185.12,-75.62 1327.88,-75.62"/>
