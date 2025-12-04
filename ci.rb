@@ -19,5 +19,12 @@ include Cinnabar::Command::TaskArrMixin
 include Sinlog::Mixin
 include Argvise::HashMixin
 # ----------
-#
+module Cinnabar
+  CI_DIR = File.expand_path('ci', __dir__)
+end
+
+if Dir.exist? Cinnabar::CI_DIR
+  def require_ci(script) = require File.join(Cinnabar::CI_DIR, script)
+end
+# ----------
 load ARGV[0]
