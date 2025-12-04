@@ -1,0 +1,40 @@
+# black list
+/*
+target
+tmp
+_tmp.*
+_tmp_*
+bin/tapioca
+
+.directory
+.thumbnails*
+.DS_Store
+._.DS_Store
+desktop.ini
+Thumbs.db
+Thumbs.db:encryptable
+
+!/.git*
+!/src
+!/License
+!/docs
+!/ci.rb
+!/ci
+!/.rubocop.yml
+!/lib
+!/bin
+!/misc
+!/.yardopts
+!/*.gemspec
+# !/examples
+# !/tests
+# !/.rustfmt.toml
+# !/.cargo
+# !/Cargo.toml
+# !/Cargo.lock
+# !/build.rs
+# !/rust-toolchain.toml
+# !/assets
+# !/locales
+# !/crates
+# !/Readme*.md

@@ -1,0 +1,39 @@
+
+name: Build and Deploy Pages
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'lib/**/*.rb'
+      - '.github/workflows/pages.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '4.0.0-preview2'
+
+      - name: Install YARD
+        shell: ruby {0}
+        run: |
+          %w[redcarpet yard]
+            .each { system "gem install #{_1}"}
+
+      - name: Generate Docs
+        run: yardoc
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./doc

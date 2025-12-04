@@ -1,0 +1,122 @@
+# frozen_string_literal: true
+
+module Cinnabar::Downloader
+  module_function
+
+  require 'open-uri'
+
+  DEFAULT_DL_OPTS = {
+    out_dir: 'tmp', file_name: nil,
+  }.freeze
+
+  # @example
+  #
+  #     url = 'https://docs.ruby-lang.org/en/3.4/OpenURI.html'
+  #     opts = { out_dir: "tmp", file_name: "doc.html" }
+  #     DL = Cinnabar::Downloader
+  #     DL.download(url, opts)
+  #
+  # @param url [String] e.g., **https://url.local**
+  #
+  # @param opts [Hash] Options for customizing the download behavior.
+  #   e.g., `{out_dir: 'download', file_name: nil, headers: {'User-Agent' => "aria2/1.37.0"}}`
+  #
+  # @option opts [String] :out_dir
+  #   Directory where the downloaded file will be saved.
+  # @option opts [String, nil] :file_name
+  #   Name of the output file. If nil, it will be inferred from the URL.
+  # @option opts [Hash{String => String}] :headers
+  #   Optional HTTP headers to include in the request.
+  # @return [Integer]
+  def download(url, opts = {})
+    opts = DEFAULT_DL_OPTS.merge(opts)
+    out_dir, file_name, headers = opts.values_at(:out_dir, :file_name, :headers)
+    out_dir = '.' if out_dir.nil?
+
+    headers = build_headers(headers)
+    parsed_url = Kernel.URI(url)
+    final_file_name = determine_filename(file_name, parsed_url)
+    file_path = setup_file_path(out_dir, final_file_name)
+
+    Kernel.p file_path
+    parsed_url
+      .open(headers)
+      .then { IO.copy_stream(_1, file_path.to_s) }
+  end
+
+  # @return [Hash]
+  def build_headers(headers)
+    base_headers = {
+      'User-Agent' => 'Mozilla/5.0 (Linux; aarch64 Wayland; rv:138.0) Gecko/20100101 Firefox/138.0',
+    }
+    base_headers.merge(headers || {}).transform_keys(&:to_s)
+  end
+
+  # @return [String]
+  def determine_filename(file_name, parsed_url)
+    filename = file_name || File.basename(parsed_url.path || '')
+    case filename.strip
+      when '', '/' then 'index.html'
+      else filename
+    end
+  end
+
+  # @return [Pathname]
+  def setup_file_path(out_dir, file_name)
+    Kernel.Pathname(out_dir)
+      .tap(&:mkpath)
+      .join(file_name)
+  end
+end
+
+module Cinnabar::Downloader
+  # The foundation of {StrRefin} and {StrMixin}
+  module StrExt
+    # @see Cinnabar::Downloader.download
+    #
+    # @param opts [Hash] Options for customizing the download behavior.
+    #   e.g., `{out_dir: 'download', file_name: nil, headers: {'User-Agent' => "aria2/1.37.0"}}`
+    #
+    # @option opts [String] :out_dir
+    # @option opts [String, nil] :file_name
+    # @option opts [Hash{String => String}] :headers
+    # @return [Integer]
+    def download(opts = {})
+      Cinnabar::Downloader.download(self, opts)
+    end
+  end
+
+  # -------------
+
+  # @example
+  #
+  #     include Cinnabar::Downloader::StrMixin
+  #
+  #     url = 'https://docs.ruby-lang.org/en/master'
+  #
+  #     url.download
+  #     # OR: url.download({out_dir: "tmp", file_name: "custom.html"})
+  #
+  # @see Cinnabar::Downloader.download
+  # @see StrExt
+  module StrMixin
+    def self.included(_host) = ::String.include StrExt
+  end
+
+  # @example
+  #
+  #     using Cinnabar::Downloader::StrRefin
+  #
+  #     url = 'https://docs.ruby-lang.org/en/master'
+  #
+  #     url.download
+  #     # OR: url.download({out_dir: "/tmp", file_name: "index.html"})
+  #
+  # @see Cinnabar::Downloader.download
+  # @see StrExt
+  module StrRefin
+    refine ::String do
+      import_methods StrExt
+    end
+  end
+end
