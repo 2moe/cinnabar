@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative 'last_branch_name'
+require_relative 'continue'
+
+require 'sinlog'
+using Sinlog::Refin
+
+branch = get_branch_name(__FILE__)
+  .tap(&log_info)
+
+system 'git branch -vva'
+
+command = <<CMD
+  git switch #{branch}
+  git branch -u origin/#{branch} #{branch}
+  git branch -vva
+CMD
+
+"\n#{command}".log_dbg
+
+run_cmd_or_cancel[command]

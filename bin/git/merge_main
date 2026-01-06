@@ -1,0 +1,38 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative 'last_branch_name'
+require_relative 'continue'
+
+require 'argvise'
+using Argvise::HashRefin
+
+# require 'cinnabar'
+# using Cinnabar::Command::ArrRefin
+
+require 'sinlog'
+using Sinlog::Refin
+
+# rubocop:disable Style/GlobalVars
+$branch = get_branch_name(__FILE__)
+  .tap(&:log_info)
+
+def merge_branch
+  {
+    git: (),
+    merge: (),
+    "allow-unrelated-histories": true,
+    squash: true,
+    X: 'theirs',
+  }
+    .to_argv
+    .push($branch)
+    .tap(&:log_dbg)
+    .then(&run_cmd_or_cancel)
+end
+
+'git fetch origin'.tap(&:log_dbg).then { system _1 }
+case `git rev-parse --abbrev-ref HEAD`.chomp
+  when $branch then ()
+  else merge_branch
+end
