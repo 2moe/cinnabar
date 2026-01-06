@@ -10,15 +10,15 @@ module Cinnabar
   # This is handy when you want to pass a converter into higher-order APIs
   # (e.g., map/filter pipelines).
   #
-  # @param dir [String, #to_s] a directory path (or any object convertible to String)
-  # @return [Proc] a lambda that maps `dir` to `Pathname(dir)`
+  # @param s [String, #to_s] a path (e.g., file/dir) (or any object convertible to String)
+  # @return [Proc] a lambda that maps `s` to `Pathname(s)`
   #
-  # @example Convert a list of directories to Pathname objects
+  # @example convert a list of directories to Pathname objects
   #
   #     conv = Cinnabar.to_path_proc
   #     %w[/tmp /var].map(&conv)
   #     #=> [#<Pathname:/tmp>, #<Pathname:/var>]
-  def self.to_path_proc = ->(dir) { Pathname(dir) }
+  def self.to_path_proc = ->(s) { Pathname(s) }
 end
 
 # Adds `String#to_path` as a convenience helper to convert strings into {Kernel.Pathname}.
