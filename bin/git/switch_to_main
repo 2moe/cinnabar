@@ -8,7 +8,7 @@ require 'sinlog'
 using Sinlog::Refin
 
 branch = get_branch_name(__FILE__)
-  .tap(&log_info)
+  .tap(&:log_info)
 
 system 'git branch -vva'
 
