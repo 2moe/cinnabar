@@ -31,7 +31,7 @@ def merge_branch
     .then { |x| x.run_cmd if continue_or_cancel? }
 end
 
-'git fetch origin'.tap(&:log_dbg).then { system _1 }
+# 'git fetch origin'.tap(&:log_dbg).then { system _1 }
 case `git rev-parse --abbrev-ref HEAD`.chomp
   when $branch then ()
   else merge_branch
