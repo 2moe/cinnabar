@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 # -----------------
-# Depends: tree, ruby (>= 3.4.0)
+# Depends: tree, ruby (>= 3.1)
 # Description: Build and show gem contents.
 # -----------------
 require 'rubygems'
