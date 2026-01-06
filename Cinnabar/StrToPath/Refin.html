@@ -4,7 +4,7 @@
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>
-  Module: Cinnabar::Downloader::StrRefin
+  Module: Cinnabar::StrToPath::Refin
   
     &mdash; Cinnabar
   
@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="../../css/common.css" type="text/css" />
 
 <script type="text/javascript">
-  pathId = "Cinnabar::Downloader::StrRefin";
+  pathId = "Cinnabar::StrToPath::Refin";
   relpath = '../../';
 </script>
 
@@ -36,10 +36,10 @@
       <div id="header">
         <div id="menu">
   
-    <a href="../../_index.html">Index (S)</a> &raquo;
-    <span class='title'><span class='object_link'><a href="../../Cinnabar.html" title="Cinnabar (module)">Cinnabar</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../Downloader.html" title="Cinnabar::Downloader (module)">Downloader</a></span></span>
+    <a href="../../_index.html">Index (R)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../../Cinnabar.html" title="Cinnabar (module)">Cinnabar</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../StrToPath.html" title="Cinnabar::StrToPath (module)">StrToPath</a></span></span>
      &raquo; 
-    <span class="title">StrRefin</span>
+    <span class="title">Refin</span>
   
 </div>
 
@@ -59,7 +59,7 @@
         <div class="clear"></div>
       </div>
 
-      <div id="content"><h1>Module: Cinnabar::Downloader::StrRefin
+      <div id="content"><h1>Module: Cinnabar::StrToPath::Refin
   
   
   
@@ -78,14 +78,18 @@
   
   <dl>
     <dt>Defined in:</dt>
-    <dd>lib/cinnabar/net.rb</dd>
+    <dd>lib/cinnabar/path.rb</dd>
   </dl>
   
 </div>
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    
+    <p>Adds <code>String#to_path</code> via Ruby refinements (lexically scoped).</p>
+
+<p>This avoids global monkey patches. The method is only visible within scopes
+where <code>using Cinnabar::StrToPath::Refin</code> is active.</p>
+
 
   </div>
 </div>
@@ -96,24 +100,13 @@
     
       
       <pre class="example code"><code>
-<span class='id identifier rubyid_using'>using</span> <span class='const'><span class='object_link'><a href="../../Cinnabar.html" title="Cinnabar (module)">Cinnabar</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Downloader.html" title="Cinnabar::Downloader (module)">Downloader</a></span></span><span class='op'>::</span><span class='const'>StrRefin</span>
+<span class='id identifier rubyid_using'>using</span> <span class='const'><span class='object_link'><a href="../../Cinnabar.html" title="Cinnabar (module)">Cinnabar</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../StrToPath.html" title="Cinnabar::StrToPath (module)">StrToPath</a></span></span><span class='op'>::</span><span class='const'>Refin</span>
 
-<span class='id identifier rubyid_url'>url</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>https://docs.ruby-lang.org/en/master</span><span class='tstring_end'>&#39;</span></span>
-
-<span class='id identifier rubyid_url'>url</span><span class='period'>.</span><span class='id identifier rubyid_download'>download</span>
-<span class='comment'># OR: url.download({out_dir: &quot;/tmp&quot;, file_name: &quot;index.html&quot;})</span></code></pre>
+<span class='id identifier rubyid___dir__'>__dir__</span><span class='period'>.</span><span class='id identifier rubyid_to_path'>to_path</span>
+<span class='comment'># Same as `Pathname(__dir__)`</span></code></pre>
     
   </div>
 
-
-  <p class="tag_title">See Also:</p>
-  <ul class="see">
-    
-      <li><span class='object_link'><a href="../Downloader.html#download-class_method" title="Cinnabar::Downloader.download (method)">download</a></span></li>
-    
-      <li><span class='object_link'><a href="StrExt.html" title="Cinnabar::Downloader::StrExt (module)">StrExt</a></span></li>
-    
-  </ul>
 
 </div>
 
