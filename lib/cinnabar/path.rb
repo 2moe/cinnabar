@@ -107,7 +107,7 @@ module Cinnabar::Path
   #
   # If the gem cannot be located, it will try to install it and retry up to `max_retries`.
   #
-  # @param gem_name [String, Symbol] gem name to locate (default: 'logger')
+  # @param gem_name [String, #to_s] gem name to locate (default: 'logger')
   # @param cache_file [String] cache file path (default: 'tmp/load_path.txt')
   # @param max_retries [Integer] maximum retries for gem install + re-check (default: 2)
   # @return [void]
