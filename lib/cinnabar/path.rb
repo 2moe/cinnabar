@@ -10,7 +10,7 @@ module Cinnabar
   # This is handy when you want to pass a converter into higher-order APIs
   # (e.g., map/filter pipelines).
   #
-  # @param s [String, #to_s] a path (e.g., file/dir) (or any object convertible to String)
+  # @param s [String, Pathname] a path (e.g., file/dir)
   # @return [Proc] a lambda that maps `s` to `Pathname(s)`
   #
   # @example convert a list of directories to Pathname objects
