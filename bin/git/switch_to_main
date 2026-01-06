@@ -20,4 +20,4 @@ CMD
 
 "\n#{command}".log_dbg
 
-run_cmd_or_cancel[command]
+system command if continue_or_cancel?

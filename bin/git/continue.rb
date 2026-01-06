@@ -2,10 +2,13 @@
 
 require 'io/console'
 
-def run_cmd_or_cancel = ->(command) do
+def continue_or_cancel?
   print 'Continue? [Y/n] '
   case char = $stdin.getch.downcase
-    when 'y' then system command
-    else puts char
+    when 'y'
+      return true
   end
+
+  puts char
+  false
 end

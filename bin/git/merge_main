@@ -7,8 +7,8 @@ require_relative 'continue'
 require 'argvise'
 using Argvise::HashRefin
 
-# require 'cinnabar'
-# using Cinnabar::Command::ArrRefin
+require 'cinnabar'
+using Cinnabar::Command::ArrRefin
 
 require 'sinlog'
 using Sinlog::Refin
@@ -28,7 +28,7 @@ def merge_branch
     .to_argv
     .push($branch)
     .tap(&:log_dbg)
-    .then(&run_cmd_or_cancel)
+    .then { |x| x.run_cmd if continue_or_cancel? }
 end
 
 'git fetch origin'.tap(&:log_dbg).then { system _1 }
