@@ -199,7 +199,7 @@
     <h4 class="tag_title">Examples:</h4>
     
       
-        <h5 class="example_title"><div class='inline'><p>Convert a list of directories to Pathname objects</p>
+        <h5 class="example_title"><div class='inline'><p>convert a list of directories to Pathname objects</p>
 </div></h5>
       
       <pre class="example code"><code>
@@ -213,7 +213,7 @@
   
     <li>
       
-        <span class='name'>dir</span>
+        <span class='name'>s</span>
       
       
         <span class='type'>(<tt>String</tt>, <tt>#to_s</tt>)</span>
@@ -221,7 +221,7 @@
       
       
         &mdash;
-        <div class='inline'><p>a directory path (or any object convertible to String)</p>
+        <div class='inline'><p>a path (e.g., file/dir) (or any object convertible to String)</p>
 </div>
       
     </li>
@@ -239,7 +239,7 @@
       
       
         &mdash;
-        <div class='inline'><p>a lambda that maps <code>dir</code> to <code>Pathname(dir)</code></p>
+        <div class='inline'><p>a lambda that maps <code>s</code> to <code>Pathname(s)</code></p>
 </div>
       
     </li>
@@ -257,7 +257,7 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/cinnabar/path.rb', line 21</span>
 
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_path_proc'>to_path_proc</span> <span class='op'>=</span> <span class='tlambda'>-&gt;</span><span class='lparen'>(</span><span class='id identifier rubyid_dir'>dir</span><span class='rparen'>)</span> <span class='tlambeg'>{</span> <span class='const'>Pathname</span><span class='lparen'>(</span><span class='id identifier rubyid_dir'>dir</span><span class='rparen'>)</span> <span class='rbrace'>}</span></pre>
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_path_proc'>to_path_proc</span> <span class='op'>=</span> <span class='tlambda'>-&gt;</span><span class='lparen'>(</span><span class='id identifier rubyid_s'>s</span><span class='rparen'>)</span> <span class='tlambeg'>{</span> <span class='const'>Pathname</span><span class='lparen'>(</span><span class='id identifier rubyid_s'>s</span><span class='rparen'>)</span> <span class='rbrace'>}</span></pre>
     </td>
   </tr>
 </table>
@@ -268,7 +268,7 @@
 </div>
 
       <div id="footer">
-  Generated on Tue Jan  6 15:37:31 2026 by
+  Generated on Tue Jan  6 16:06:51 2026 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.38 (ruby-4.0.0).
 </div>
