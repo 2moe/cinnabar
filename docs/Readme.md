@@ -156,3 +156,11 @@ jobs:
       .▷(upper)
       .▷ :puts #=> "FOO"
 ```
+
+### String To Pathname
+
+```ruby,yaml
+- run: |
+    __dir__.to_path #  Same as Pathname(__dir__)
+      .join('tmp')
+```
