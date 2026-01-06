@@ -26,7 +26,7 @@ A:
 
 ## API DOC
 
-![ClassDiagram](../misc/assets/svg/ClassDiagram.svg)
+[![ClassDiagram](../misc/assets/svg/ClassDiagram.svg)](https://raw.githubusercontent.com/2moe/cinnabar/refs/heads/main/misc/assets/svg/ClassDiagram.svg)
 
 - Github Pages: <https://2moe.github.io/cinnabar>
 
