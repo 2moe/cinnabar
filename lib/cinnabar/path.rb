@@ -5,7 +5,7 @@
 require 'pathname'
 
 module Cinnabar
-  # Build a Proc that converts a directory-like value into a {Kernel.Pathname}.
+  # Build a Proc that converts a string value into a {Kernel.Pathname}.
   #
   # This is handy when you want to pass a converter into higher-order APIs
   # (e.g., map/filter pipelines).
