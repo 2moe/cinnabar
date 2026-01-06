@@ -21,7 +21,7 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '4.0.0-preview2'
+          ruby-version: '4.0'
 
       - name: Install YARD
         shell: ruby {0}
