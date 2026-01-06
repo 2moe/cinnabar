@@ -1,14 +1,25 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env -S ruby --disable=gems
 # rubocop:disable Style/MixinUsage
 # rubocop:disable Naming/HeredocDelimiterNaming
 # frozen_string_literal: true
 
-require 'irb'
+$: << File.expand_path('../misc/download', __dir__)
 
-# To ensure compatibility with "--disable=gems", we must load the external
-# `argvise` & `sinlog` first, and then we can load `cinnabar`.
-require_relative '../misc/download/argvise'
-require_relative '../misc/download/sinlog'
+-> {
+  return if RUBY_VERSION.split('.').first.to_i <= 3
+
+  require_relative '../lib/cinnabar/path'
+  cache_file = File.expand_path('../load_path.txt', __dir__)
+  append_path = ->(pkg) {
+    Cinnabar::Path.find_and_append_load_path(pkg, cache_file:)
+  }
+
+  %w[irb reline logger].each(&append_path)
+}.call
+
+require 'irb'
+require 'argvise'
+require 'sinlog'
 
 require_relative '../lib/cinnabar'
 
@@ -30,6 +41,7 @@ include Argvise::HashMixin
     Command::ArrMixin
     Command::TaskArrMixin
     Downloader::StrMixin
+    StrToPath::Mixin
   ].map { "#{green}include #{magenta}Cinnabar::#{blue}#{_1}\n" }
     .each(&:display)
   puts reset

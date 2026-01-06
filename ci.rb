@@ -4,17 +4,32 @@
 require 'fileutils'
 FS = FileUtils
 
+# `load_path`.push 'misc/download'
+$: << File.expand_path('misc/download', __dir__)
+
+# Fix ruby v4.0.
+# When `--disable=gems` is used,
+# the `$LOAD_PATH` for `logger` must be specified manually,
+# otherwise `sinlog` will raise an error.
+-> {
+  return if RUBY_VERSION.split('.').first.to_i <= 3
+
+  require_relative 'lib/cinnabar/path'
+  cache_file = File.expand_path('load_path.txt', __dir__)
+  Cinnabar::Path.find_and_append_load_path('logger', cache_file:)
+}.call
+
 # ----------
-# To ensure compatibility with "--disable=gems", we must load the `sinlog` first,
-# and then we can load `cinnabar`.
-require_relative 'misc/download/sinlog'
-require_relative 'misc/download/argvise'
+require 'argvise'
+require 'sinlog'
+
 require_relative 'lib/cinnabar'
 
 include Cinnabar::FnPipe::Mixin
 include Cinnabar::Downloader::StrMixin
 include Cinnabar::Command::ArrMixin
 include Cinnabar::Command::TaskArrMixin
+include Cinnabar::StrToPath::Mixin
 
 include Sinlog::Mixin
 include Argvise::HashMixin

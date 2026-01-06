@@ -7,9 +7,8 @@
 # @see https://github.com/2moe/cinnabar
 module Cinnabar; end
 
+require 'pathname'
+
 # To ensure compatibility with "--disable=gems" (allowing users to pre-require),
 # add conditional checks before requiring these libraries.
 require 'sinlog' unless defined? Sinlog::VERSION
-# require 'argvise' unless defined? Argvise::VERSION
-
-require 'pathname'
