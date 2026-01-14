@@ -230,7 +230,7 @@ module Cinnabar::Path
     attempts = 0
 
     begin
-      logger_dir = gem_dir(pkg)
+      result_dir = gem_dir(pkg)
     rescue StandardError => e
       # Inform user about the failure and the planned automatic install attempt.
       #
@@ -242,12 +242,13 @@ module Cinnabar::Path
       Kernel.system "gem install #{pkg}" or Kernel.raise 'Failed to install'
 
       attempts += 1
-      Kernel.raise 'Already retried 3 times' if attempts > max_retries
+      Kernel.raise "Already retried #{max_retries} times" if attempts > max_retries
 
       retry
     end
 
-    logger_dir
+    result_dir
   end
+
   # private_class_method :gem_dir_with_retry
 end
