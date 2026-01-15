@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  Class: Cinnabar::GemPath
+  
+    &mdash; Cinnabar
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" />
+
+<script type="text/javascript">
+  pathId = "Cinnabar::GemPath";
+  relpath = '../';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="../class_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="../_index.html">Index (G)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../Cinnabar.html" title="Cinnabar (module)">Cinnabar</a></span></span>
+     &raquo; 
+    <span class="title">GemPath</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><h1>Class: Cinnabar::GemPath
+  
+  
+  
+</h1>
+<div class="box_info">
+  
+  <dl>
+    <dt>Inherits:</dt>
+    <dd>
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">Cinnabar::GemPath</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+    </dd>
+  </dl>
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+  <dl>
+    <dt>Defined in:</dt>
+    <dd>lib/cinnabar/gem_path.rb</dd>
+  </dl>
+  
+</div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+  <div class="note notetag">
+    <strong>Note:</strong>
+    <div class='inline'><p>Prefer using the cache whenever possible; RubyGems operations can be slow.</p>
+</div>
+  </div>
+
+<p>Cached resolver for gem load paths.</p>
+
+<p><span class='object_link'><a href="GemPathCore.html" title="Cinnabar::GemPathCore (module)">GemPathCore</a></span> performs expensive operations (loading RubyGems, resolving specs,
+installing missing gems). This class adds a JSON cache layer to reuse results and
+avoid repeated slow calls.</p>
+
+<h2 id="what-it-caches">What it caches</h2>
+
+<ul>
+<li>A Hash mapping <code>gem_name =&gt; [full_require_paths...]</code></li>
+<li>Serialized to JSON on disk (see <span class='object_link'><a href="#cache_file-instance_method" title="Cinnabar::GemPath#cache_file (method)">#cache_file</a></span>)</li>
+</ul>
+
+<h2 id="typical-usage">Typical usage</h2>
+
+<ol>
+<li>Create an instance with a set of gems.</li>
+<li>Call <span class='object_link'><a href="#append_load_path!-instance_method" title="Cinnabar::GemPath#append_load_path! (method)">#append_load_path!</a></span> to add those directories to <code>$LOAD_PATH</code>.</li>
+</ol>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+  
+    <h2>
+      Constant Summary
+      <small><a href="#" class="constants_summary_toggle">collapse</a></small>
+    </h2>
+
+    <dl class="constants">
+      
+        <dt id="CoreMod-constant" class="">CoreMod =
+          <div class="docstring">
+  <div class="discussion">
+    <p>Alias to the low-level implementation module.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Module</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='const'><span class='object_link'><a href="../Cinnabar.html" title="Cinnabar (module)">Cinnabar</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="GemPathCore.html" title="Cinnabar::GemPathCore (module)">GemPathCore</a></span></span></pre></dd>
+      
+        <dt id="DEFAULT_OPTS-constant" class="">DEFAULT_OPTS =
+          <div class="docstring">
+  <div class="discussion">
+    <p>Default options for initialization.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='lbrace'>{</span>
+  <span class='label'>cache_dir:</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_expand_path'>expand_path</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>~/.cache/ruby</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='comma'>,</span>
+  <span class='label'>cache_file:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>gem_path.json</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='label'>gems:</span> <span class='lbracket'>[</span><span class='rbracket'>]</span><span class='comma'>,</span>
+  <span class='label'>install_gem:</span> <span class='kw'>true</span><span class='comma'>,</span>
+<span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+      
+    </dl>
+  
+
+
+
+
+  <h2>Instance Attribute Summary <small><a href="#" class="summary_toggle">collapse</a></small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#cache_file-instance_method" title="#cache_file (instance method)">#<strong>cache_file</strong>  &#x21d2; Pathname </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Cache file path (<code>*.json</code>).</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#cache_hash-instance_method" title="#cache_hash (instance method)">#<strong>cache_hash</strong>  &#x21d2; Hash{String=&gt;Array&lt;String&gt;} </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>The in-memory cache hash.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#gems-instance_method" title="#gems (instance method)">#<strong>gems</strong>  &#x21d2; Array&lt;String&gt; </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Normalized gem names (unique, non-empty).</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#install_gem-instance_method" title="#install_gem (instance method)">#<strong>install_gem</strong>  &#x21d2; Boolean </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Whether missing gems should be installed automatically.</p>
+</div></span>
+  
+</li>
+
+    
+  </ul>
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small><a href="#" class="summary_toggle">collapse</a></small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#append_load_path!-instance_method" title="#append_load_path! (instance method)">#<strong>append_load_path!</strong>  &#x21d2; void </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Appends cached gem paths into <code>$LOAD_PATH</code>.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="protected ">
+  <span class="summary_signature">
+    
+      <a href="#atomic_write_cache_file-instance_method" title="#atomic_write_cache_file (instance method)">#<strong>atomic_write_cache_file</strong>(content)  &#x21d2; void </a>
+    
+
+    
+  </span>
+  
+  
+  
+  <span class="note title protected">protected</span>
+  
+  
+  <span class="private note title">private</span>
+
+  
+    <span class="summary_desc"><div class='inline'><p>Writes cache content to disk atomically.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="protected ">
+  <span class="summary_signature">
+    
+      <a href="#decode_cache_file-instance_method" title="#decode_cache_file (instance method)">#<strong>decode_cache_file</strong>  &#x21d2; void </a>
+    
+
+    
+  </span>
+  
+  
+  
+  <span class="note title protected">protected</span>
+  
+  
+  <span class="private note title">private</span>
+
+  
+    <span class="summary_desc"><div class='inline'><p>Decodes the cache file and refreshes any missing/broken entries.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="protected ">
+  <span class="summary_signature">
+    
+      <a href="#init_cache_file-instance_method" title="#init_cache_file (instance method)">#<strong>init_cache_file</strong>(dir, file)  &#x21d2; Pathname </a>
+    
+
+    
+  </span>
+  
+  
+  
+  <span class="note title protected">protected</span>
+  
+  
+  <span class="private note title">private</span>
+
+  
+    <span class="summary_desc"><div class='inline'><p>Resolves the cache file path.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">#<strong>initialize</strong>(opts = {})  &#x21d2; Cinnabar::GemPath </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Creates a cache-backed gem path resolver.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="protected ">
+  <span class="summary_signature">
+    
+      <a href="#try_decode_cache_hash-instance_method" title="#try_decode_cache_hash (instance method)">#<strong>try_decode_cache_hash</strong>  &#x21d2; Hash </a>
+    
+
+    
+  </span>
+  
+  
+  
+  <span class="note title protected">protected</span>
+  
+  
+  <span class="private note title">private</span>
+
+  
+    <span class="summary_desc"><div class='inline'><p>Attempts to decode the cache JSON file into a Hash.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#update_cache_file-instance_method" title="#update_cache_file (instance method)">#<strong>update_cache_file</strong>  &#x21d2; void </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Writes the in-memory cache to disk.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+<div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <h3 class="signature first" id="initialize-instance_method">
+  
+    #<strong>initialize</strong>(opts = {})  &#x21d2; <tt><span class='object_link'><a href="" title="Cinnabar::GemPath (class)">Cinnabar::GemPath</a></span></tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Creates a cache-backed gem path resolver.</p>
+
+<h2 id="behavior">Behavior</h2>
+
+<ul>
+<li>Normalizes <code>gems</code> to unique, non-empty strings.</li>
+<li>If cache file exists, it is decoded and then refreshed:
+
+<ul>
+<li>Missing gems are generated and merged into the cache.</li>
+<li>Broken entries (paths not existing) are regenerated.</li>
+</ul></li>
+<li>If no cache exists, it generates paths for all gems and writes the cache.</li>
+</ul>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <h4 class="tag_title">Examples:</h4>
+    
+      
+        <h5 class="example_title"><div class='inline'><p>Create and append load paths</p>
+</div></h5>
+      
+      <pre class="example code"><code>
+<span class='id identifier rubyid_gems'>gems</span> <span class='op'>=</span> <span class='qwords_beg'>%w[</span><span class='tstring_content'>rdoc</span><span class='words_sep'> </span><span class='tstring_content'>logger</span><span class='words_sep'> </span><span class='tstring_content'>irb</span><span class='words_sep'> </span><span class='tstring_content'>reline</span><span class='words_sep'> </span><span class='tstring_content'>fiddle</span><span class='tstring_end'>]</span></span>
+
+<span class='lbrace'>{</span> <span class='label'>gems:</span> <span class='rbrace'>}</span>
+  <span class='period'>.</span><span class='id identifier rubyid_then'>then</span> <span class='lbrace'>{</span> <span class='const'><span class='object_link'><a href="../Cinnabar.html" title="Cinnabar (module)">Cinnabar</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="" title="Cinnabar::GemPath (class)">GemPath</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span> <span class='id identifier rubyid__1'>_1</span> <span class='rbrace'>}</span>
+  <span class='period'>.</span><span class='id identifier rubyid_append_load_path!'>append_load_path!</span></code></pre>
+    
+  </div>
+<p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>opts</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>{}</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>options overriding <span class='object_link'><a href="#DEFAULT_OPTS-constant" title="Cinnabar::GemPath::DEFAULT_OPTS (constant)">DEFAULT_OPTS</a></span></p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  
+    
+    
+    <p class="tag_title">Options Hash (<tt>opts</tt>):</p>
+    <ul class="option">
+      
+        <li>
+          <span class="name">:cache_dir</span>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+        </li>
+      
+        <li>
+          <span class="name">:cache_file</span>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+        </li>
+      
+        <li>
+          <span class="name">:gems</span>
+          <span class="type">(<tt>Array&lt;String,Symbol&gt;</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+        </li>
+      
+        <li>
+          <span class="name">:install_gem</span>
+          <span class="type">(<tt>Boolean</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+        </li>
+      
+    </ul>
+  
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/cinnabar/gem_path.rb', line 236</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_options'>options</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="#DEFAULT_OPTS-constant" title="Cinnabar::GemPath::DEFAULT_OPTS (constant)">DEFAULT_OPTS</a></span></span><span class='period'>.</span><span class='id identifier rubyid_merge'>merge</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span> <span class='op'>||</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+
+  <span class='id identifier rubyid_gems'>gems</span><span class='comma'>,</span> <span class='id identifier rubyid_cache_dir'>cache_dir</span><span class='comma'>,</span> <span class='id identifier rubyid_cache_file'>cache_file</span><span class='comma'>,</span> <span class='ivar'>@install_gem</span> <span class='op'>=</span>
+    <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_values_at'>values_at</span><span class='lparen'>(</span><span class='symbol'>:gems</span><span class='comma'>,</span> <span class='symbol'>:cache_dir</span><span class='comma'>,</span> <span class='symbol'>:cache_file</span><span class='comma'>,</span> <span class='symbol'>:install_gem</span><span class='rparen'>)</span>
+
+  <span class='ivar'>@gems</span> <span class='op'>=</span> <span class='const'>Array</span><span class='lparen'>(</span><span class='id identifier rubyid_gems'>gems</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:to_s</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_reject'>reject</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:empty?</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_uniq'>uniq</span>
+
+  <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Empty @gems!</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='ivar'>@gems</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
+
+  <span class='ivar'>@cache_file</span> <span class='op'>=</span> <span class='id identifier rubyid_init_cache_file'>init_cache_file</span><span class='lparen'>(</span><span class='id identifier rubyid_cache_dir'>cache_dir</span><span class='comma'>,</span> <span class='id identifier rubyid_cache_file'>cache_file</span><span class='rparen'>)</span>
+  <span class='ivar'>@cache_hash</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+
+  <span class='kw'>if</span> <span class='ivar'>@cache_file</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span>
+    <span class='id identifier rubyid_decode_cache_file'>decode_cache_file</span>
+    <span class='kw'>return</span>
+  <span class='kw'>end</span>
+
+  <span class='id identifier rubyid_merge_generated_paths!'>merge_generated_paths!</span><span class='lparen'>(</span><span class='ivar'>@gems</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
+    
+      
+      <span id="cache_file=-instance_method"></span>
+      <div class="method_details first">
+  <h3 class="signature first" id="cache_file-instance_method">
+  
+    #<strong>cache_file</strong>  &#x21d2; <tt>Pathname</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Returns cache file path (<code>*.json</code>).</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Pathname</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>cache file path (<code>*.json</code>)</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+190
+191
+192</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/cinnabar/gem_path.rb', line 190</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_cache_file'>cache_file</span>
+  <span class='ivar'>@cache_file</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="cache_hash-instance_method">
+  
+    #<strong>cache_hash</strong>  &#x21d2; <tt>Hash{String=&gt;Array&lt;String&gt;}</tt>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>The in-memory cache hash.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash{String=&gt;Array&lt;String&gt;}</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>gem name =&gt; full require paths</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+195
+196
+197</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/cinnabar/gem_path.rb', line 195</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_cache_hash'>cache_hash</span>
+  <span class='ivar'>@cache_hash</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="gems=-instance_method"></span>
+      <div class="method_details ">
+  <h3 class="signature " id="gems-instance_method">
+  
+    #<strong>gems</strong>  &#x21d2; <tt>Array&lt;String&gt;</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Returns normalized gem names (unique, non-empty).</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;String&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>normalized gem names (unique, non-empty)</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+190</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/cinnabar/gem_path.rb', line 190</span>
+
+<span class='id identifier rubyid_attr_accessor'>attr_accessor</span> <span class='symbol'>:cache_file</span><span class='comma'>,</span> <span class='symbol'>:gems</span><span class='comma'>,</span> <span class='symbol'>:install_gem</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="install_gem=-instance_method"></span>
+      <div class="method_details ">
+  <h3 class="signature " id="install_gem-instance_method">
+  
+    #<strong>install_gem</strong>  &#x21d2; <tt>Boolean</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Returns whether missing gems should be installed automatically.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>whether missing gems should be installed automatically</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+190</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/cinnabar/gem_path.rb', line 190</span>
+
+<span class='id identifier rubyid_attr_accessor'>attr_accessor</span> <span class='symbol'>:cache_file</span><span class='comma'>,</span> <span class='symbol'>:gems</span><span class='comma'>,</span> <span class='symbol'>:install_gem</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="append_load_path!-instance_method">
+  
+    #<strong>append_load_path!</strong>  &#x21d2; <tt>void</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note returns_void">This method returns an undefined value.</p><p>Appends cached gem paths into <code>$LOAD_PATH</code>.</p>
+
+<p>This is typically called after initialization. It will add each directory in the
+cache for the configured gems to Ruby&#39;s load path.</p>
+
+<h2 id="notes">Notes</h2>
+
+<ul>
+<li>This is <strong>idempotent</strong>: it avoids inserting duplicates.</li>
+<li>It mutates the global <code>$LOAD_PATH</code> (<code>$:</code>).</li>
+</ul>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/cinnabar/gem_path.rb', line 280</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_append_load_path!'>append_load_path!</span>
+  <span class='ivar'>@cache_hash</span>
+    <span class='period'>.</span><span class='id identifier rubyid_filter'>filter</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_k'>k</span><span class='comma'>,</span> <span class='id identifier rubyid__'>_</span><span class='op'>|</span> <span class='ivar'>@gems</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span> <span class='id identifier rubyid_k'>k</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span> <span class='rbrace'>}</span>
+    <span class='period'>.</span><span class='id identifier rubyid_each_value'>each_value</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_vals'>vals</span><span class='op'>|</span>
+      <span class='const'>Array</span><span class='lparen'>(</span><span class='id identifier rubyid_vals'>vals</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_dir'>dir</span><span class='op'>|</span>
+        <span class='comment'># $: is $LOAD_PATH
+</span>        <span class='gvar'>$:</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='id identifier rubyid_dir'>dir</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='gvar'>$:</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='id identifier rubyid_dir'>dir</span><span class='rparen'>)</span> <span class='comment'># rubocop:disable Style/SpecialGlobalVars
+</span>      <span class='kw'>end</span>
+    <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="atomic_write_cache_file-instance_method">
+  
+    #<strong>atomic_write_cache_file</strong>(content)  &#x21d2; <tt>void</tt>  <span class="extras">(protected)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This method is part of a private API.</strong>
+  You should avoid using this method if possible, as it may be removed or be changed in the future.
+</p>
+<p class="note returns_void">This method returns an undefined value.</p><p>Writes cache content to disk atomically.</p>
+
+<p>It writes to a temporary file and renames it to the final cache path.
+This reduces the chance of leaving a partially-written JSON file when the
+process crashes or is interrupted mid-write.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>content</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>serialized JSON content</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/cinnabar/gem_path.rb', line 303</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_atomic_write_cache_file'>atomic_write_cache_file</span><span class='lparen'>(</span><span class='id identifier rubyid_content'>content</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_path'>path</span> <span class='op'>=</span> <span class='ivar'>@cache_file</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span>
+  <span class='id identifier rubyid_tmp'>tmp</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_path'>path</span><span class='embexpr_end'>}</span><span class='tstring_content'>.tmp.</span><span class='embexpr_beg'>#{</span><span class='gvar'>$$</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span> <span class='comment'># rubocop:disable Style/SpecialGlobalVars
+</span>  <span class='kw'>begin</span>
+    <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_write'>write</span><span class='lparen'>(</span><span class='id identifier rubyid_tmp'>tmp</span><span class='comma'>,</span> <span class='id identifier rubyid_content'>content</span><span class='rparen'>)</span>
+    <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_rename'>rename</span><span class='lparen'>(</span><span class='id identifier rubyid_tmp'>tmp</span><span class='comma'>,</span> <span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
+  <span class='kw'>ensure</span>
+    <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_unlink'>unlink</span><span class='lparen'>(</span><span class='id identifier rubyid_tmp'>tmp</span><span class='rparen'>)</span> <span class='kw'>rescue</span> <span class='kw'>nil</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="decode_cache_file-instance_method">
+  
+    #<strong>decode_cache_file</strong>  &#x21d2; <tt>void</tt>  <span class="extras">(protected)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This method is part of a private API.</strong>
+  You should avoid using this method if possible, as it may be removed or be changed in the future.
+</p>
+<p class="note returns_void">This method returns an undefined value.</p><p>Decodes the cache file and refreshes any missing/broken entries.</p>
+
+<ul>
+<li>Loads <span class='object_link'><a href="#cache_hash-instance_method" title="Cinnabar::GemPath#cache_hash (method)">#cache_hash</a></span> from disk.</li>
+<li>Generates entries for missing gems in <span class='object_link'><a href="#gems-instance_method" title="Cinnabar::GemPath#gems (method)">#gems</a></span>.</li>
+<li>Regenerates entries whose paths no longer exist on disk.</li>
+</ul>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+364
+365
+366
+367
+368</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/cinnabar/gem_path.rb', line 364</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_decode_cache_file'>decode_cache_file</span>
+  <span class='ivar'>@cache_hash</span> <span class='op'>=</span> <span class='id identifier rubyid_try_decode_cache_hash'>try_decode_cache_hash</span>
+  <span class='id identifier rubyid_refresh_missing_gems!'>refresh_missing_gems!</span>
+  <span class='id identifier rubyid_refresh_broken_gems!'>refresh_broken_gems!</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="init_cache_file-instance_method">
+  
+    #<strong>init_cache_file</strong>(dir, file)  &#x21d2; <tt>Pathname</tt>  <span class="extras">(protected)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This method is part of a private API.</strong>
+  You should avoid using this method if possible, as it may be removed or be changed in the future.
+</p>
+<p>Resolves the cache file path.</p>
+
+<ul>
+<li>If <code>file</code> is absolute, it is used directly.</li>
+<li>Otherwise, it is resolved relative to <code>dir</code>.</li>
+<li>Ensures the directory exists (<code>mkpath</code>).</li>
+</ul>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>dir</span>
+      
+      
+        <span class='type'>(<tt>String</tt>, <tt>Pathname</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>base directory</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>file</span>
+      
+      
+        <span class='type'>(<tt>String</tt>, <tt>Pathname</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>file name or absolute path</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Pathname</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>resolved cache file path</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/cinnabar/gem_path.rb', line 325</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_init_cache_file'>init_cache_file</span><span class='lparen'>(</span><span class='id identifier rubyid_dir'>dir</span><span class='comma'>,</span> <span class='id identifier rubyid_file'>file</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_f'>f</span> <span class='op'>=</span> <span class='const'>Pathname</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='rparen'>)</span>
+
+  <span class='kw'>if</span> <span class='id identifier rubyid_f'>f</span><span class='period'>.</span><span class='id identifier rubyid_absolute?'>absolute?</span>
+    <span class='id identifier rubyid_f'>f</span>
+  <span class='kw'>else</span>
+    <span class='const'>Pathname</span><span class='lparen'>(</span><span class='id identifier rubyid_dir'>dir</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='id identifier rubyid_f'>f</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+    <span class='period'>.</span><span class='id identifier rubyid_tap'>tap</span> <span class='lbrace'>{</span> <span class='id identifier rubyid__1'>_1</span><span class='period'>.</span><span class='id identifier rubyid_dirname'>dirname</span><span class='period'>.</span><span class='id identifier rubyid_mkpath'>mkpath</span> <span class='rbrace'>}</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="try_decode_cache_hash-instance_method">
+  
+    #<strong>try_decode_cache_hash</strong>  &#x21d2; <tt>Hash</tt>  <span class="extras">(protected)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This method is part of a private API.</strong>
+  You should avoid using this method if possible, as it may be removed or be changed in the future.
+</p>
+
+  <div class="note notetag">
+    <strong>Note:</strong>
+    <div class='inline'><p>This method intentionally rescues <code>Exception</code> per the original design.</p>
+</div>
+  </div>
+
+<p>Attempts to decode the cache JSON file into a Hash.</p>
+
+<p>If decoding fails for any reason, it warns and removes the cache file, then
+returns an empty hash.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>decoded hash (or <code>{}</code> if decode fails)</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+345
+346
+347
+348
+349
+350
+351
+352
+353</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/cinnabar/gem_path.rb', line 345</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_try_decode_cache_hash'>try_decode_cache_hash</span>
+  <span class='ivar'>@cache_file</span>
+    <span class='period'>.</span><span class='id identifier rubyid_read'>read</span>
+    <span class='period'>.</span><span class='id identifier rubyid_then'>then</span> <span class='lbrace'>{</span> <span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span> <span class='id identifier rubyid__1'>_1</span> <span class='rbrace'>}</span>
+<span class='kw'>rescue</span> <span class='const'>Exception</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span> <span class='comment'># rubocop:disable Lint/RescueException
+</span>  <span class='const'>Kernel</span><span class='period'>.</span><span class='id identifier rubyid_warn'>warn</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>[WARN] Failed to decode json file; error: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_e'>e</span><span class='embexpr_end'>}</span><span class='tstring_content'>; unlink </span><span class='embexpr_beg'>#{</span><span class='ivar'>@cache_file</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='ivar'>@cache_file</span><span class='period'>.</span><span class='id identifier rubyid_unlink'>unlink</span>
+  <span class='lbrace'>{</span><span class='rbrace'>}</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="update_cache_file-instance_method">
+  
+    #<strong>update_cache_file</strong>  &#x21d2; <tt>void</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note returns_void">This method returns an undefined value.</p><p>Writes the in-memory cache to disk.</p>
+
+<p>This serializes <span class='object_link'><a href="#cache_hash-instance_method" title="Cinnabar::GemPath#cache_hash (method)">#cache_hash</a></span> as JSON and persists it using an atomic write
+strategy (see <span class='object_link'><a href="#atomic_write_cache_file-instance_method" title="Cinnabar::GemPath#atomic_write_cache_file (method)">#atomic_write_cache_file</a></span>).</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+263
+264
+265
+266
+267</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/cinnabar/gem_path.rb', line 263</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_update_cache_file'>update_cache_file</span>
+  <span class='ivar'>@cache_hash</span>
+    <span class='period'>.</span><span class='id identifier rubyid_then'>then</span> <span class='lbrace'>{</span> <span class='const'>JSON</span><span class='period'>.</span><span class='id identifier rubyid_dump'>dump</span> <span class='id identifier rubyid__1'>_1</span> <span class='rbrace'>}</span>
+    <span class='period'>.</span><span class='id identifier rubyid_then'>then</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_atomic_write_cache_file'>atomic_write_cache_file</span> <span class='id identifier rubyid__1'>_1</span> <span class='rbrace'>}</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+      <div id="footer">
+  Generated on Thu Jan 15 16:19:07 2026 by
+  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.38 (ruby-4.0.1).
+</div>
+
+    </div>
+  </body>
+</html>
