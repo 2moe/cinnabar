@@ -18,7 +18,7 @@ $: << File.expand_path('misc/download', __dir__)
   {
     cache_file: File.expand_path('load_path.json', __dir__),
     gems: %w[logger],
-  }.then(&Cinnabar.gem_paths_proc)
+  }.then(&Cinnabar.new_gem_path_proc)
     .append_load_path!
 }.call
 

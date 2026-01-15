@@ -28,11 +28,11 @@ module Cinnabar
   #     {
   #        gems: %w[rdoc logger irb reline fiddle],
   #        install_gem: true
-  #     }.then(&Cinnabar.gem_paths_proc)
+  #     }.then(&Cinnabar.new_gem_path_proc)
   #      .append_load_path!
   #
   # @see Cinnabar::GemPath
-  def self.gem_paths_proc = ->(opts) { Cinnabar::GemPath.new(opts) }
+  def self.new_gem_path_proc = ->(opts) { Cinnabar::GemPath.new(opts) }
 end
 
 # Low-level helpers for resolving RubyGems load paths.

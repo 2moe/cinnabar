@@ -17,7 +17,7 @@
     cache_file: '../load_path.json',
     gems:,
   }
-    .then(&Cinnabar.gem_paths_proc)
+    .then(&Cinnabar.new_gem_path_proc)
     .append_load_path!
 
   gems.each { require _1 }

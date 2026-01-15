@@ -33,12 +33,16 @@ $ruby_cache_dir = -> {
     .each { require dir.join(_1) }
 }.call
 
-def require_gems = ->(gems) {
+def new_cinnabar_gem_path_class(gems)
   {
     cache_dir: $ruby_cache_dir,
     gems:,
   }
-    .then(&Cinnabar.gem_paths_proc)
+    .then(&Cinnabar.new_gem_path_proc)
+end
+
+def require_gems = ->(gems) {
+  new_cinnabar_gem_path_class(gems)
     .append_load_path!
 
   gems.each { require _1 }
@@ -93,11 +97,8 @@ include Argvise::HashMixin
 # load which & sh-utils
 -> {
   gem = 'cinnabar'
-  {
-    cache_dir: $ruby_cache_dir,
-    gems: [gem],
-  }
-    .then(&Cinnabar.gem_paths_proc)
+
+  new_cinnabar_gem_path_class([gem])
     .cache_hash[gem]
     .first
     .then { File.expand_path('../misc/firb/lib', _1).to_path }

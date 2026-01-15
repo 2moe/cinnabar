@@ -5,7 +5,7 @@
 > TL;DR: Refactor Path logic, introduce GemPath & Utils, update CI loading, and adjust RuboCop rules
 
 - Introduced `Cinnabar::GemPath` and replaced legacy `Cinnabar::Path` gem‑loading logic.
-- Updated `ci.rb` to use new `gem_paths_proc` and JSON cache file.
+- Updated `ci.rb` to use `new_gem_path_proc` and JSON cache file.
 - Updated gem_path cache format:
   - DSL:`"#{k1}#{2spaces}#{v1}"` => json: `{"#{k1}": [v1, v2]}`
 - Removed large monolithic gem‑path utilities from `path.rb`.
