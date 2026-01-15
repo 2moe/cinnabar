@@ -307,7 +307,11 @@ class Cinnabar::GemPath
       File.write(tmp, content)
       File.rename(tmp, path)
     ensure
-      File.unlink(tmp) rescue nil
+      begin
+        File.unlink(tmp)
+      rescue StandardError
+        nil
+      end
     end
   end
 

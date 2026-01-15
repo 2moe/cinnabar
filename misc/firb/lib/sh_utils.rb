@@ -8,13 +8,13 @@ BAT_CAT_CMD = -> {
   %w[bat batcat]
     .each { return [_1, '-Pp'] if which(_1) }
   ['cat']
-}.call
+}.call.freeze
 
 EXA_LS_CMD = -> {
   %w[eza exa]
     .each { return [_1, '--icons=auto'] if which(_1) }
   ['ls', '--color=auto']
-}.call
+}.call.freeze
 
 # Similar to `cd "/path/to/dir"; pwd; ls`
 def cdir(path = Dir.home)
@@ -31,10 +31,10 @@ def path_sym_to_str(path)
 end
 
 def run_eza_ls(path = '.', *rest)
-  cmd = EXA_LS_CMD
+  cmd = EXA_LS_CMD.dup
   cmd.concat(rest) unless rest.empty?
   path = path_sym_to_str(path)
-  cmd << File.expand_path(path)
+  cmd.push(File.expand_path(path))
   puts "\e[9m #{cmd} \e[0m"
   system(*cmd)
 end
@@ -53,7 +53,7 @@ def la(path = '.', *rest)
 end
 
 def cat(path, *rest)
-  cmd = BAT_CAT_CMD
+  cmd = BAT_CAT_CMD.dup
   path = path_sym_to_str(path)
   cmd << File.expand_path(path)
   cmd.concat(rest) unless rest.empty?

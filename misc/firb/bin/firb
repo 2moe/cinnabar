@@ -39,10 +39,15 @@ $ruby_cache_dir = -> {
 }.call
 
 -> {
-  dir = $ruby_cache_dir.join('lib/cinnabar')
+  libs = %w[gem_path utils]
+  lib_dir = File.expand_path('../../../lib/cinnabar', __dir__).then { Pathname _1 }
+  if lib_dir.exist?
+    libs.each { require lib_dir.join(_1) }
+    return
+  end
 
-  %w[gem_path utils]
-    .each { require dir.join(_1) }
+  dir = $ruby_cache_dir.join('lib/cinnabar')
+  libs.each { require dir.join(_1) }
 }.call
 
 def new_cinnabar_gem_path_class(gems)
@@ -107,20 +112,9 @@ include Sinlog::Mixin
 include Argvise::HashMixin
 
 # load `which` & `sh-utils`
--> {
-  gem = 'cinnabar'
-
-  new_cinnabar_gem_path_class([gem])
-    .cache_hash[gem]
-    .last
-    .then { File.expand_path('../misc/firb/lib', _1).to_path }
-    .tap do |dir|
-      %w[which sh_utils]
-        .each { require dir.join(_1) }
-    end
-}.call
-# require_relative '../lib/which'
-# require_relative '../lib/sh_utils'
+require_relative '../lib/which'
+require_relative '../lib/version'
+require_relative '../lib/sh_utils'
 
 # ====================
 run_ruby_cli unless ARGV.empty?

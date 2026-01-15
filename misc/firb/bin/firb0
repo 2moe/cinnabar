@@ -33,10 +33,15 @@ $ruby_cache_dir = -> {
 }.call
 
 -> {
-  dir = $ruby_cache_dir.join('lib/cinnabar')
+  libs = %w[gem_path utils]
+  lib_dir = File.expand_path('../../../lib/cinnabar', __dir__).then { Pathname _1 }
+  if lib_dir.exist?
+    libs.each { require lib_dir.join(_1) }
+    return
+  end
 
-  %w[gem_path utils]
-    .each { require dir.join(_1) }
+  dir = $ruby_cache_dir.join('lib/cinnabar')
+  libs.each { require dir.join(_1) }
 }.call
 
 def new_cinnabar_gem_path_class(gems)
@@ -69,6 +74,12 @@ def start_irb
   GEM_VER
 
   IRB.start
+end
+
+begin
+  require_relative '../lib/version'
+rescue StandardError
+  nil
 end
 
 unless ARGV.empty?
