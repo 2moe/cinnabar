@@ -172,4 +172,10 @@ jobs:
 
 > **NON CI Environment**
 
-1. install cinnabar and copy to cache dir
+1. run: [misc/firb/install-cinnabar.ps1](../misc/firb/install-cinnabar.ps1)
+2. Enter `${XDG_CACHE_HOME:-~/.cache}/ruby/firb/bin/`
+3. run
+  - [`./firb0`](../misc/firb/bin/firb0)
+  - OR `.\firb0.bat` (Windows)
+  - OR [`./firb`](../misc/firb/bin/firb)
+  - OR `.\firb.bat` (Windows)

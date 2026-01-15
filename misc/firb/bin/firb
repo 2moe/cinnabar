@@ -7,9 +7,21 @@
 # rubocop:disable Style/MultilineBlockChain
 # frozen_string_literal: true
 
+# ====================
 # NOTE
 #   The first launch may be slow because it generates the cache JSON.
 #   Subsequent launches reuse the cache as much as possible for the fastest startup.
+#
+# Usage:
+#   `firb` => Enter irb
+# in IRB:
+#   l           #=> `eza --icons`
+#   ll          #=> `eza --icons -lh`
+#   la          #=> `eza --icons -lah`
+#   cat 'file'  #=> `bat -Pp file`
+#   which :ruby #=> `which ruby`
+#   cdir '~/.cache' #=> `cd ~/.cache; pwd; ls`
+#   pwd         #=> Dir.pwd
 # ====================
 
 Kernel.warn "  ruby:\t#{RUBY_VERSION}" if ARGV.empty?
@@ -94,13 +106,13 @@ include Cinnabar::StrToPath::Mixin
 include Sinlog::Mixin
 include Argvise::HashMixin
 
-# load which & sh-utils
+# load `which` & `sh-utils`
 -> {
   gem = 'cinnabar'
 
   new_cinnabar_gem_path_class([gem])
     .cache_hash[gem]
-    .first
+    .last
     .then { File.expand_path('../misc/firb/lib', _1).to_path }
     .tap do |dir|
       %w[which sh_utils]

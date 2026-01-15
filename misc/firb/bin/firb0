@@ -1,18 +1,22 @@
 #!/usr/bin/env -S ruby --disable=gems
 # ====================
+# Depends: ruby (>= 3.1)
+#
 # rubocop:disable Style/GlobalVars
 # frozen_string_literal: true
 
 # ====================
-# NOTE: call `Cinnabar::Utils.gems!` or `require 'rubygems'` to re-enable `::Gem` module
+# NOTE: call `Cinnabar::Utils.gems!` or `require 'rubygems'` to re-enable `::Gem` module.
+# For faster loading, consider using `gems.then(&require_gems)` instead of `require 'rubygems'`;
+# e.g., `%w[irb rdoc reline].then(&require_gems)`
 #
 # The first run automatically generates a cache JSON, so it may take a little longer.
 # On the second run and beyond, it reuses the cache whenever possible to maximize startup speed.
 #
 # Usage:
-#   - `firb` => Start IRB
-#   - `firb -h` => Display help info
-#   - `firb -e "puts 2"` => Equivalent to `ruby -e "puts 2"`, but with `ENV['RUBYOPT'] = '--disable=gems'`
+#   - `firb0` => Start IRB
+#   - `firb0 -h` => Display help info
+#   - `firb0 -e "puts 2"` => Equivalent to `ruby -e "puts 2"`, but with `ENV['RUBYOPT'] = '--disable=gems'`
 
 Kernel.warn "  ruby:\t#{RUBY_VERSION}" if ARGV.empty?
 

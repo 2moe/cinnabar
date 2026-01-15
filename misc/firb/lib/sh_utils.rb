@@ -16,8 +16,9 @@ EXA_LS_CMD = -> {
   ['ls', '--color=auto']
 }.call
 
-# Similar to `cd "/path/to/dir"; ls`
+# Similar to `cd "/path/to/dir"; pwd; ls`
 def cdir(path = Dir.home)
+  path = path_sym_to_str(path)
   File
     .expand_path(path)
     .then { Dir.chdir _1 }
