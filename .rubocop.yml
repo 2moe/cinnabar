@@ -26,6 +26,8 @@ Style/Documentation:
   Enabled: false
 Style/ClassAndModuleChildren:
   EnforcedStyle: compact
+Style/RescueModifier:
+  Enabled: false
 
 # https://docs.rubocop.org/rubocop/cops_metrics.html
 Metrics/MethodLength:
@@ -42,4 +44,3 @@ Layout/MultilineMethodCallIndentation:
 Naming/AsciiIdentifiers:
   # AsciiConstants: false
   Enabled: false
-

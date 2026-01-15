@@ -24,11 +24,12 @@ A:
 2. Cinnabar is toxic. This project was developed for *Dirty and Quick* purposes and may produce unexpected side effects—in a sense, it is not entirely harmless.
 3. Cinnabar, a mineral form of mercury sulfide (HgS), is a deep red-colored stone. And ruby is also a deep red stone. Naming a Ruby project "Cinnabar" is particularly fitting.
 
-## API DOC
+## Documentation
 
 [![ClassDiagram](../misc/assets/svg/ClassDiagram.svg)](https://raw.githubusercontent.com/2moe/cinnabar/refs/heads/main/misc/assets/svg/ClassDiagram.svg)
 
 - Github Pages: <https://2moe.github.io/cinnabar>
+- [ChangeLog](./ChangeLog.md)
 
 ## Quick Start
 

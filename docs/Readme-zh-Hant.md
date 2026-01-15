@@ -24,10 +24,10 @@
 2.  硃砂有毒。這個專案是為了 **猛、糙、快** (a.k.a. *Dirty and Quick*) 的目的而開發的，可能會產生意料之外的副作用（它並非完全無害）。
 3.  硃砂是一種硫化汞 (HgS) 的礦物，呈深紅色，而 Ruby 也是一種深紅色的寶石。給一個 Ruby 專案取名為 “Cinnabar（硃砂）” 非常貼切。
 
-## API DOC
+## Doc
 
 [![ClassDiagram](../misc/assets/svg/ClassDiagram.svg)](https://raw.githubusercontent.com/2moe/cinnabar/refs/heads/main/misc/assets/svg/ClassDiagram.svg)
 
 - Github Pages: <https://2moe.github.io/cinnabar>
-
-- 詳見[英文Doc](./Readme.md)
+- [ChangeLog](./ChangeLog.md)
+- 詳見[英文 Readme](./Readme.md)
