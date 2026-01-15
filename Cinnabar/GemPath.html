@@ -1035,7 +1035,11 @@ process crashes or is interrupted mid-write.</p>
 309
 310
 311
-312</pre>
+312
+313
+314
+315
+316</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/cinnabar/gem_path.rb', line 303</span>
@@ -1047,7 +1051,11 @@ process crashes or is interrupted mid-write.</p>
     <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_write'>write</span><span class='lparen'>(</span><span class='id identifier rubyid_tmp'>tmp</span><span class='comma'>,</span> <span class='id identifier rubyid_content'>content</span><span class='rparen'>)</span>
     <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_rename'>rename</span><span class='lparen'>(</span><span class='id identifier rubyid_tmp'>tmp</span><span class='comma'>,</span> <span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
   <span class='kw'>ensure</span>
-    <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_unlink'>unlink</span><span class='lparen'>(</span><span class='id identifier rubyid_tmp'>tmp</span><span class='rparen'>)</span> <span class='kw'>rescue</span> <span class='kw'>nil</span>
+    <span class='kw'>begin</span>
+      <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_unlink'>unlink</span><span class='lparen'>(</span><span class='id identifier rubyid_tmp'>tmp</span><span class='rparen'>)</span>
+    <span class='kw'>rescue</span> <span class='const'>StandardError</span>
+      <span class='kw'>nil</span>
+    <span class='kw'>end</span>
   <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -1090,14 +1098,14 @@ process crashes or is interrupted mid-write.</p>
       <pre class="lines">
 
 
-364
-365
-366
-367
-368</pre>
+368
+369
+370
+371
+372</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/cinnabar/gem_path.rb', line 364</span>
+      <pre class="code"><span class="info file"># File 'lib/cinnabar/gem_path.rb', line 368</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_decode_cache_file'>decode_cache_file</span>
   <span class='ivar'>@cache_hash</span> <span class='op'>=</span> <span class='id identifier rubyid_try_decode_cache_hash'>try_decode_cache_hash</span>
@@ -1195,19 +1203,19 @@ process crashes or is interrupted mid-write.</p>
       <pre class="lines">
 
 
-325
-326
-327
-328
 329
 330
 331
 332
 333
-334</pre>
+334
+335
+336
+337
+338</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/cinnabar/gem_path.rb', line 325</span>
+      <pre class="code"><span class="info file"># File 'lib/cinnabar/gem_path.rb', line 329</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_init_cache_file'>init_cache_file</span><span class='lparen'>(</span><span class='id identifier rubyid_dir'>dir</span><span class='comma'>,</span> <span class='id identifier rubyid_file'>file</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_f'>f</span> <span class='op'>=</span> <span class='const'>Pathname</span><span class='lparen'>(</span><span class='id identifier rubyid_file'>file</span><span class='rparen'>)</span>
@@ -1280,18 +1288,18 @@ returns an empty hash.</p>
       <pre class="lines">
 
 
-345
-346
-347
-348
 349
 350
 351
 352
-353</pre>
+353
+354
+355
+356
+357</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/cinnabar/gem_path.rb', line 345</span>
+      <pre class="code"><span class="info file"># File 'lib/cinnabar/gem_path.rb', line 349</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_try_decode_cache_hash'>try_decode_cache_hash</span>
   <span class='ivar'>@cache_file</span>
@@ -1359,7 +1367,7 @@ strategy (see <span class='object_link'><a href="#atomic_write_cache_file-instan
 </div>
 
       <div id="footer">
-  Generated on Thu Jan 15 16:35:14 2026 by
+  Generated on Thu Jan 15 17:38:41 2026 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.38 (ruby-4.0.1).
 </div>
