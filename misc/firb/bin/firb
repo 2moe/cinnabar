@@ -1,0 +1,115 @@
+#!/usr/bin/env -S ruby --disable=gems
+# ====================
+# Depends: ruby (>= 3.1), bat | batcat, eza
+#
+# rubocop:disable Style/GlobalVars
+# rubocop:disable Style/MixinUsage
+# rubocop:disable Style/MultilineBlockChain
+# frozen_string_literal: true
+
+# NOTE
+#   The first launch may be slow because it generates the cache JSON.
+#   Subsequent launches reuse the cache as much as possible for the fastest startup.
+# ====================
+
+Kernel.warn "  ruby:\t#{RUBY_VERSION}" if ARGV.empty?
+
+$ruby_cache_dir = -> {
+  require 'pathname'
+
+  env_dir = ENV['xdg_cache_home'.upcase]
+  case env_dir
+    when nil, ''
+      Pathname(Dir.home).join('.cache/ruby')
+    else
+      Pathname(env_dir).join('ruby')
+  end
+}.call
+
+-> {
+  dir = $ruby_cache_dir.join('lib/cinnabar')
+
+  %w[gem_path utils]
+    .each { require dir.join(_1) }
+}.call
+
+def require_gems = ->(gems) {
+  {
+    cache_dir: $ruby_cache_dir,
+    gems:,
+  }
+    .then(&Cinnabar.gem_paths_proc)
+    .append_load_path!
+
+  gems.each { require _1 }
+}
+
+def start_irb
+  %w[
+    irb rdoc reline
+  ].tap { _1 << 'fiddle' if Cinnabar::Utils::OS.windows? }
+    .then(&require_gems)
+
+  two_spaces = '  '
+  Kernel.warn <<~GEM_VER
+    #{two_spaces}irb:\t#{IRB::VERSION}
+    #{two_spaces}rdoc:\t#{RDoc::VERSION}
+    #{Dir.pwd}
+  GEM_VER
+  IRB.start
+end
+
+def run_ruby_cli
+  require 'rbconfig'
+  ENV['RUBYOPT'] = '--disable=gems'
+  exec RbConfig.ruby, *ARGV
+end
+
+-> {
+  %w[
+    logger
+    sinlog
+    argvise
+    cinnabar
+  ]
+    .then(&require_gems)
+
+  two_spaces = '  '
+  Kernel.warn <<~GEM_VER
+    #{two_spaces}argvise:  #{Argvise::VERSION}
+    #{two_spaces}cinnabar: #{Cinnabar::VERSION}
+    #{two_spaces}sinlog:   #{Sinlog::VERSION}
+  GEM_VER
+}.call
+
+include Cinnabar::FnPipe::Mixin
+include Cinnabar::Downloader::StrMixin
+include Cinnabar::Command::ArrMixin
+include Cinnabar::Command::TaskArrMixin
+include Cinnabar::StrToPath::Mixin
+include Sinlog::Mixin
+include Argvise::HashMixin
+
+# load which & sh-utils
+-> {
+  gem = 'cinnabar'
+  {
+    cache_dir: $ruby_cache_dir,
+    gems: [gem],
+  }
+    .then(&Cinnabar.gem_paths_proc)
+    .cache_hash[gem]
+    .first
+    .then { File.expand_path('../misc/firb/lib', _1).to_path }
+    .tap do |dir|
+      %w[which sh_utils]
+        .each { require dir.join(_1) }
+    end
+}.call
+# require_relative '../lib/which'
+# require_relative '../lib/sh_utils'
+
+# ====================
+run_ruby_cli unless ARGV.empty?
+
+start_irb

@@ -7,10 +7,27 @@ require_relative 'enter_misc_dir'
 Dir.chdir('../lib')
 final_file = 'cinnabar.rb'
 
+def extra_inline_expr(name)
+  mod_name =
+    case File.basename name
+      when 'gem_path'
+        'Cinnabar::GemPathCore'
+      when 'utils'
+        'Cinnabar::Utils'
+      else ()
+    end
+
+  return '' if mod_name.nil?
+
+  "unless defined? #{mod_name}"
+end
+
 exprs =
   Dir['cinnabar/*.rb']
-    # .sort
-    .map { %(require_relative '#{_1.chomp('.rb')}') }
+    .map { _1.chomp('.rb') }
+    .map { |name|
+      %(require_relative '#{name}' #{extra_inline_expr(name)}).chomp(' ')
+    }
     .push('')
 
 File.open(final_file, 'w+') do |out_file|

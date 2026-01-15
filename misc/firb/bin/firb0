@@ -1,0 +1,72 @@
+#!/usr/bin/env -S ruby --disable=gems
+# ====================
+# rubocop:disable Style/GlobalVars
+# frozen_string_literal: true
+
+# ====================
+# NOTE: call `Cinnabar::Utils.gems!` or `require 'rubygems'` to re-enable `::Gem` module
+#
+# The first run automatically generates a cache JSON, so it may take a little longer.
+# On the second run and beyond, it reuses the cache whenever possible to maximize startup speed.
+#
+# Usage:
+#   - `firb` => Start IRB
+#   - `firb -h` => Display help info
+#   - `firb -e "puts 2"` => Equivalent to `ruby -e "puts 2"`, but with `ENV['RUBYOPT'] = '--disable=gems'`
+
+Kernel.warn "  ruby:\t#{RUBY_VERSION}" if ARGV.empty?
+
+$ruby_cache_dir = -> {
+  require 'pathname'
+
+  env_dir = ENV['xdg_cache_home'.upcase]
+  case env_dir
+    when nil, ''
+      Pathname(Dir.home).join('.cache/ruby')
+    else
+      Pathname(env_dir).join('ruby')
+  end
+}.call
+
+-> {
+  dir = $ruby_cache_dir.join('lib/cinnabar')
+
+  %w[gem_path utils]
+    .each { require dir.join(_1) }
+}.call
+
+def require_gems = ->(gems) {
+  {
+    cache_dir: $ruby_cache_dir,
+    gems:,
+  }
+    .then(&Cinnabar.gem_paths_proc)
+    .append_load_path!
+
+  gems.each { require _1 }
+}
+
+def start_irb
+  %w[
+    irb rdoc reline
+  ].tap { _1 << 'fiddle' if Cinnabar::Utils::OS.windows? }
+    .then(&require_gems)
+
+  two_spaces = '  '
+
+  Kernel.warn <<~GEM_VER
+    #{two_spaces}irb:\t#{IRB::VERSION}
+    #{two_spaces}rdoc:\t#{RDoc::VERSION}
+    #{Dir.pwd}
+  GEM_VER
+
+  IRB.start
+end
+
+unless ARGV.empty?
+  require 'rbconfig'
+  ENV['RUBYOPT'] = '--disable=gems'
+  exec RbConfig.ruby, *ARGV
+end
+
+start_irb

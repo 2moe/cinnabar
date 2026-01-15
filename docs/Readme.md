@@ -165,3 +165,11 @@ jobs:
     __dir__.to_path #  Same as Pathname(__dir__)
       .join('tmp')
 ```
+
+### GemPath
+
+#### Faster IRB
+
+> **NON CI Environment**
+
+1. install cinnabar and copy to cache dir
