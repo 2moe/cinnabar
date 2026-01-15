@@ -394,6 +394,7 @@ class Cinnabar::GemPath
   # @return [Array<String>]
   def broken_gems
     @cache_hash
+      .filter { |k, _| @gems.include? k }
       .reject { |_, v| all_paths_exist?(v) }
       .keys
   end
