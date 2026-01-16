@@ -57,7 +57,7 @@ jobs:
         with:
           repository: 2moe/cinnabar
           path: cinnabar
-          ref: v0.0.7
+          ref: v0.0.8
 
       - name: (example) run cargo command
         run: |
@@ -168,24 +168,46 @@ jobs:
 
 ### GemPath
 
+`GemPath` is used mainly with Ruby started via the `--disable=gems` flag; the code below is equivalent to `%w[ irb rdoc reline ].each { require it }`.
+
+```ruby
+def require_gems = ->(gems) {
+  {
+    # cache_dir: File.expand_path('~/.cache/ruby'),
+    gems:,
+  }
+    .then(&Cinnabar.new_gem_path_proc)
+    .append_load_path!
+
+  gems.each { require _1 }
+}
+
+%w[
+  irb rdoc reline
+].then(&require_gems)
+```
+
 #### Faster IRB
 
-> **NON CI Environment**
+Because `GemPath` automatically caches gem `require_paths`, combining it with `ruby --disable=gems` can significantly reduce IRB startup time.
 
-1. run: [misc/firb/install-cinnabar.ps1](../misc/firb/install-cinnabar.ps1)
+1. Run: [misc/firb/install.ps1](../misc/firb/install.ps1)
 
 OR:
 
 ```pwsh
 gem install cinnabar
-gem which cinnabar
 ```
-- If the output is: `C:/Users/<UserName>/AppData/Local/gem_home/gems/cinnabar-0.0.7/lib/cinnabar.rb`
-- then change the path to `C:/Users/<UserName>/AppData/Local/gem_home/gems/cinnabar-0.0.7/misc/firb/install-cinnabar.ps1`
 
-2. Enter `${XDG_CACHE_HOME:-~/.cache}/ruby/firb/bin/`
+2.
+  - Enter the directory:
+    - `ruby -r cinnabar -e "p Cinnabar.firb_path"`
+    - OR: `${XDG_CACHE_HOME:-~/.cache}/ruby/firb/bin/` (POSIX sh)
+    - OR: `~/.cache/ruby/firb/bin/`
+    - OR: `%UserProfile%\.cache\ruby\firb\bin` (Windows CMD)
+
 3. run
   - [`./firb0`](../misc/firb/bin/firb0)
-  - OR `.\firb0.bat` (Windows)
+  - OR [`.\firb0.bat`](../misc/firb/bin/firb0.bat) (Windows)
   - OR [`./firb`](../misc/firb/bin/firb)
   - OR `.\firb.bat` (Windows)

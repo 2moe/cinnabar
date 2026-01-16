@@ -19,6 +19,18 @@ module Cinnabar
   def self.to_path_proc = ->(s) { Pathname(s) }
 end
 
+module Cinnabar
+  module_function
+
+  def firb_path
+    File.expand_path('../../misc/firb/bin/', Kernel.__dir__)
+  end
+
+  def firb_installation_script_path
+    File.expand_path('../../misc/firb/install.ps1', Kernel.__dir__)
+  end
+end
+
 # Adds `String#to_path` as a convenience helper to convert strings into {Kernel.Pathname}.
 #
 # This module supports two integration styles:

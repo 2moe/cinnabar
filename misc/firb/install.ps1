@@ -1,7 +1,7 @@
 #!/usr/bin/env pwsh
 # Usage:
 #   UNIX-like:
-#     sh install-cinnabar.ps1
+#     sh install.ps1
 #   Windows: Copy everything in this file and paste it into PowerShell to run.
 #
 # Description: install cinnabar and copy to cache dir
@@ -32,4 +32,8 @@ ruby -r pathname -r cinnabar -r fileutils -e "
 
   [lib_dir, firb]
     .each(&copy_to_cache_dir)
+
+  puts '========='
+  print 'Path: '
+  puts File.expand_path('firb/bin', cache_dir)
 "
