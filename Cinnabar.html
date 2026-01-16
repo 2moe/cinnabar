@@ -316,9 +316,6 @@
   <div class="discussion">
     <p>Returns a factory <code>Proc</code> that builds a <span class='object_link'><a href="Cinnabar/GemPath.html" title="Cinnabar::GemPath (class)">GemPath</a></span> instance.</p>
 
-<p>This is useful when you want to defer initialization or inject a constructor-like
-callable into other components (e.g., configuration objects, DI containers, hooks).</p>
-
 <h2 id="behavior">Behavior</h2>
 
 <ul>
@@ -399,10 +396,10 @@ callable into other components (e.g., configuration objects, DI containers, hook
       <pre class="lines">
 
 
-35</pre>
+32</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/cinnabar/gem_path.rb', line 35</span>
+      <pre class="code"><span class="info file"># File 'lib/cinnabar/gem_path.rb', line 32</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_new_gem_path_proc'>new_gem_path_proc</span> <span class='op'>=</span> <span class='tlambda'>-&gt;</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='rparen'>)</span> <span class='tlambeg'>{</span> <span class='const'><span class='object_link'><a href="" title="Cinnabar (module)">Cinnabar</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Cinnabar/GemPath.html" title="Cinnabar::GemPath (class)">GemPath</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="Cinnabar/GemPath.html#initialize-instance_method" title="Cinnabar::GemPath#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='rparen'>)</span> <span class='rbrace'>}</span></pre>
     </td>
@@ -504,7 +501,7 @@ callable into other components (e.g., configuration objects, DI containers, hook
 </div>
 
       <div id="footer">
-  Generated on Fri Jan 16 05:02:39 2026 by
+  Generated on Fri Jan 16 06:21:55 2026 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.38 (ruby-4.0.1).
 </div>

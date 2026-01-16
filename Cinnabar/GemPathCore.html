@@ -279,14 +279,14 @@ actually needed (lazy loading).</p>
       <pre class="lines">
 
 
+65
+66
+67
 68
-69
-70
-71
-72</pre>
+69</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/cinnabar/gem_path.rb', line 68</span>
+      <pre class="code"><span class="info file"># File 'lib/cinnabar/gem_path.rb', line 65</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_ensure_rubygems!'>ensure_rubygems!</span>
   <span class='kw'>return</span> <span class='kw'>if</span> <span class='kw'>defined?</span><span class='lparen'>(</span><span class='op'>::</span><span class='const'>Gem</span><span class='rparen'>)</span> <span class='op'>&amp;&amp;</span> <span class='op'>::</span><span class='const'>Gem</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='symbol'>:Specification</span><span class='rparen'>)</span>
@@ -390,14 +390,14 @@ directories that should be added to <code>$LOAD_PATH</code> to require files fro
       <pre class="lines">
 
 
+82
+83
+84
 85
-86
-87
-88
-89</pre>
+86</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/cinnabar/gem_path.rb', line 85</span>
+      <pre class="code"><span class="info file"># File 'lib/cinnabar/gem_path.rb', line 82</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_find_lib_paths'>find_lib_paths</span><span class='lparen'>(</span><span class='id identifier rubyid_gem_name'>gem_name</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_ensure_rubygems!'>ensure_rubygems!</span>
@@ -528,6 +528,9 @@ other dependencies are available.</li>
       <pre class="lines">
 
 
+111
+112
+113
 114
 115
 116
@@ -542,13 +545,10 @@ other dependencies are available.</li>
 125
 126
 127
-128
-129
-130
-131</pre>
+128</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/cinnabar/gem_path.rb', line 114</span>
+      <pre class="code"><span class="info file"># File 'lib/cinnabar/gem_path.rb', line 111</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_find_or_install_lib_paths'>find_or_install_lib_paths</span><span class='lparen'>(</span><span class='id identifier rubyid_gem_name'>gem_name</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_ensure_rubygems!'>ensure_rubygems!</span>
@@ -662,6 +662,9 @@ other dependencies are available.</li>
       <pre class="lines">
 
 
+138
+139
+140
 141
 142
 143
@@ -670,13 +673,10 @@ other dependencies are available.</li>
 146
 147
 148
-149
-150
-151
-152</pre>
+149</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/cinnabar/gem_path.rb', line 141</span>
+      <pre class="code"><span class="info file"># File 'lib/cinnabar/gem_path.rb', line 138</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_init_gem_dir_hash'>init_gem_dir_hash</span><span class='lparen'>(</span><span class='id identifier rubyid_gems'>gems</span><span class='comma'>,</span> <span class='label'>install_gem:</span> <span class='kw'>true</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_gems'>gems</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_name'>name</span><span class='op'>|</span>
@@ -700,7 +700,7 @@ other dependencies are available.</li>
 </div>
 
       <div id="footer">
-  Generated on Fri Jan 16 05:02:40 2026 by
+  Generated on Fri Jan 16 06:21:55 2026 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.38 (ruby-4.0.1).
 </div>
