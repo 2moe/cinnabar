@@ -1,12 +1,12 @@
 #!/usr/bin/env pwsh
 # Usage:
-#   UNIX:
+#   UNIX-like:
 #     sh install-cinnabar.ps1
 #   Windows: Copy everything in this file and paste it into PowerShell to run.
 #
 # Description: install cinnabar and copy to cache dir
 # Note: Although the shebang is `pwsh`, you can run it with POSIX sh.
-# Depens: ruby (>= 3.1)
+# Depends: ruby (>= 3.1)
 
 gem install cinnabar
 

@@ -173,6 +173,16 @@ jobs:
 > **NON CI Environment**
 
 1. run: [misc/firb/install-cinnabar.ps1](../misc/firb/install-cinnabar.ps1)
+
+OR:
+
+```pwsh
+gem install cinnabar
+gem which cinnabar
+```
+- If the output is: `C:/Users/<UserName>/AppData/Local/gem_home/gems/cinnabar-0.0.7/lib/cinnabar.rb`
+- then change the path to `C:/Users/<UserName>/AppData/Local/gem_home/gems/cinnabar-0.0.7/misc/firb/install-cinnabar.ps1`
+
 2. Enter `${XDG_CACHE_HOME:-~/.cache}/ruby/firb/bin/`
 3. run
   - [`./firb0`](../misc/firb/bin/firb0)
