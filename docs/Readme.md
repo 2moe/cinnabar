@@ -57,7 +57,7 @@ jobs:
         with:
           repository: 2moe/cinnabar
           path: cinnabar
-          ref: v0.0.6
+          ref: v0.0.7
 
       - name: (example) run cargo command
         run: |

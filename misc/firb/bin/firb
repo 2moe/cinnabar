@@ -22,8 +22,31 @@
 #   which :ruby #=> `which ruby`
 #   cdir '~/.cache' #=> `cd ~/.cache; pwd; ls`
 #   pwd         #=> Dir.pwd
+#
+# Install Dependencies:
+#
+# - Windows:
+#     winget install Microsoft.VCRedist.2015+.x64
+#     # OR: winget install Microsoft.VCRedist.2015+.arm64
+#
+#     scoop install bat eza
+#
+# - macOS:
+#     brew install bat eza
+#
+# - Debian:
+#
+#     apt update
+#     apt install -y bat eza
+#     ln -svf /usr/bin/batcat /usr/local/bin/bat
+#
+# - Arch:
+#   pacman -Sy bat eza
+#
+# - Alpine:
+#   apk add bat eza
+#
 # ====================
-
 Kernel.warn "  ruby:\t#{RUBY_VERSION}" if ARGV.empty?
 
 $ruby_cache_dir = -> {

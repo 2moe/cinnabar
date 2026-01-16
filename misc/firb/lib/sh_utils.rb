@@ -4,17 +4,9 @@
 
 require_relative 'which'
 
-BAT_CAT_CMD = -> {
-  %w[bat batcat]
-    .each { return [_1, '-Pp'] if which(_1) }
-  ['cat']
-}.call.freeze
-
-EXA_LS_CMD = -> {
-  %w[eza exa]
-    .each { return [_1, '--icons=auto'] if which(_1) }
-  ['ls', '--color=auto']
-}.call.freeze
+BAT_CAT_CMD = ['bat', '-Pp'].freeze
+EXA_LS_CMD = ['eza', '--icons=auto'].freeze
+# EXA_LS_CMD = ['ls', '--color=auto'].freeze
 
 # Similar to `cd "/path/to/dir"; pwd; ls`
 def cdir(path = Dir.home)
