@@ -2,8 +2,6 @@
 #
 # frozen_string_literal: true
 
-require_relative 'which'
-
 BAT_CAT_CMD = ['bat', '-Pp'].freeze
 EXA_LS_CMD = ['eza', '--icons=auto'].freeze
 # EXA_LS_CMD = ['ls', '--color=auto'].freeze

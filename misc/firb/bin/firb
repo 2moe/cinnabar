@@ -134,11 +134,7 @@ include Cinnabar::StrToPath::Mixin
 include Sinlog::Mixin
 include Argvise::HashMixin
 
-# load `which` & `sh-utils`
-require_relative '../lib/which'
-require_relative '../lib/version'
-require_relative '../lib/sh_utils'
-
+require_relative '../lib/firb'
 # ====================
 run_ruby_cli unless ARGV.empty?
 
