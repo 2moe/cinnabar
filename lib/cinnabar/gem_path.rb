@@ -7,9 +7,6 @@ require 'pathname'
 module Cinnabar
   # Returns a factory `Proc` that builds a {Cinnabar::GemPath} instance.
   #
-  # This is useful when you want to defer initialization or inject a constructor-like
-  # callable into other components (e.g., configuration objects, DI containers, hooks).
-  #
   # ## Behavior
   #
   # - The returned `Proc` accepts a single argument `opts`.
