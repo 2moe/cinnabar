@@ -60,9 +60,13 @@ def require_gems = ->(gems) {
 }
 
 def start_irb
+  major_ver = RUBY_VERSION.split('.').first.to_i
+
   %w[
-    irb rdoc reline
-  ].tap { _1 << 'fiddle' if Cinnabar::Utils::OS.windows? }
+    irb rdoc
+  ]
+    .tap { _1 << 'fiddle' if Cinnabar::Utils::OS.windows? }
+    .tap { _1 << 'reline' if major_ver >= 4 }
     .then(&require_gems)
 
   two_spaces = '  '
