@@ -46,6 +46,15 @@
 # - Alpine:
 #   apk add bat eza
 #
+# Note:
+#
+# On Alpine v3.23, if you encounter any rdoc‑related errors, you can try running the following command.
+#
+# ```ash
+#   unlink ~/.cache/ruby/gem_path.json
+#   su -c 'unlink /usr/lib/ruby/3.4.0/rdoc.rb'
+#   gem install rdoc
+# ```
 # ====================
 Kernel.warn "  ruby:\t#{RUBY_VERSION}" if ARGV.empty?
 

@@ -17,6 +17,16 @@
 #   - `firb0` => Start IRB
 #   - `firb0 -h` => Display help info
 #   - `firb0 -e "puts 2"` => Equivalent to `ruby -e "puts 2"`, but with `ENV['RUBYOPT'] = '--disable=gems'`
+#
+# Note:
+#
+# On Alpine v3.23, if you encounter any rdoc‑related errors, you can try running the following command.
+#
+# ```ash
+#   unlink ~/.cache/ruby/gem_path.json
+#   su -c 'unlink /usr/lib/ruby/3.4.0/rdoc.rb'
+#   gem install rdoc
+# ```
 
 Kernel.warn "  ruby:\t#{RUBY_VERSION}" if ARGV.empty?
 
