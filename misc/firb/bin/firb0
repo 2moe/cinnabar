@@ -27,7 +27,15 @@
 #   su -c 'unlink /usr/lib/ruby/3.4.0/rdoc.rb'
 #   gem install rdoc
 # ```
-
+#
+# If you encounter any issues related to `env -S`, you can wrap it into a new script.
+#
+# ```sh
+# #!/bin/sh
+# # You need to replace /path/to/firb0 with the actual path
+# ruby --disable=gems /path/to/firb0 "$@"
+# ```
+# ==============
 Kernel.warn "  ruby:\t#{RUBY_VERSION}" if ARGV.empty?
 
 $ruby_cache_dir = -> {
