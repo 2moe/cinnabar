@@ -1,25 +1,31 @@
 #!/usr/bin/env -S ruby --disable=gems
 # rubocop:disable Style/MixinUsage
 # rubocop:disable Naming/HeredocDelimiterNaming
+# rubocop:disable Style/SpecialGlobalVars
 # frozen_string_literal: true
 
-$: << File.expand_path('../misc/download', __dir__)
+%w[gem_path utils]
+  .each { require_relative "../lib/cinnabar/#{_1}" }
 
 -> {
-  return if RUBY_VERSION.split('.').first.to_i <= 3
+  gems = %w[
+    rdoc reline irb argvise logger sinlog
+  ].tap { _1 << 'fiddle' if Cinnabar::Utils::OS.windows? }
 
-  require_relative '../lib/cinnabar/path'
-  cache_file = File.expand_path('../load_path.txt', __dir__)
-  append_path = ->(pkg) {
-    Cinnabar::Path.find_and_append_load_path(pkg, cache_file:)
+  {
+    cache_dir: __dir__,
+    cache_file: '../load_path.json',
+    gems:,
   }
+    .then(&Cinnabar.new_gem_path_proc)
+    .append_load_path!
 
-  %w[irb reline logger].each(&append_path)
+  gems.each { require _1 }
 }.call
 
-require 'irb'
 require 'argvise'
 require 'sinlog'
+require 'irb'
 
 require_relative '../lib/cinnabar'
 
@@ -35,16 +41,17 @@ include Argvise::HashMixin
   # cyan = "\e[36m"
   reset = "\e[0m"
 
-  puts 'You can manually load the following modules:'
+  'You can manually load the following modules:'.log_info
   %w[
     FnPipe::Mixin
     Command::ArrMixin
     Command::TaskArrMixin
     Downloader::StrMixin
     StrToPath::Mixin
-  ].map { "#{green}include #{magenta}Cinnabar::#{blue}#{_1}\n" }
-    .each(&:display)
-  puts reset
+  ].map { "#{green}include #{magenta}Cinnabar::#{blue}#{_1}" }
+    .join("\n")
+    .tap(&:display)
+  Kernel.warn reset
 }.call
 
 IRB.start

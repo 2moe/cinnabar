@@ -1,0 +1,113 @@
+#!/usr/bin/env -S ruby --disable=gems
+# ====================
+# Depends: ruby (>= 3.1)
+#
+# rubocop:disable Style/GlobalVars
+# frozen_string_literal: true
+
+# ====================
+# NOTE: call `Cinnabar::Utils.gems!` or `require 'rubygems'` to re-enable `::Gem` module.
+# For faster loading, consider using `gems.then(&require_gems)` instead of `require 'rubygems'`;
+# e.g., `%w[irb rdoc reline].then(&require_gems)`
+#
+# The first run automatically generates a cache JSON, so it may take a little longer.
+# On the second run and beyond, it reuses the cache whenever possible to maximize startup speed.
+#
+# Usage:
+#   - `firb0` => Start IRB
+#   - `firb0 -h` => Display help info
+#   - `firb0 -e "puts 2"` => Equivalent to `ruby -e "puts 2"`, but with `ENV['RUBYOPT'] = '--disable=gems'`
+#
+# Note:
+#
+# On Alpine v3.23, if you encounter any rdoc‑related errors, you can try running the following command.
+#
+# ```ash
+#   unlink ~/.cache/ruby/gem_path.json
+#   su -c 'unlink /usr/lib/ruby/3.4.0/rdoc.rb'
+#   gem install rdoc
+# ```
+#
+# If you encounter any issues related to `env -S`, you can wrap it into a new script.
+#
+# ```sh
+# #!/bin/sh
+# # You need to replace /path/to/firb0 with the actual path
+# ruby --disable=gems /path/to/firb0 "$@"
+# ```
+# ==============
+Kernel.warn "  ruby:\t#{RUBY_VERSION}" if ARGV.empty?
+
+$ruby_cache_dir = -> {
+  require 'pathname'
+
+  env_dir = ENV['xdg_cache_home'.upcase]
+  case env_dir
+    when nil, ''
+      Pathname(Dir.home).join('.cache/ruby')
+    else
+      Pathname(env_dir).join('ruby')
+  end
+}.call
+
+-> {
+  libs = %w[gem_path utils]
+  lib_dir = File.expand_path('../../../lib/cinnabar', __dir__).then { Pathname _1 }
+  if lib_dir.exist?
+    libs.each { require lib_dir.join(_1) }
+    return
+  end
+
+  dir = $ruby_cache_dir.join('lib/cinnabar')
+  libs.each { require dir.join(_1) }
+}.call
+
+def new_cinnabar_gem_path_class(gems)
+  {
+    cache_dir: $ruby_cache_dir,
+    gems:,
+  }
+    .then(&Cinnabar.new_gem_path_proc)
+end
+
+def require_gems = ->(gems) {
+  new_cinnabar_gem_path_class(gems)
+    .append_load_path!
+
+  gems.each { require _1 }
+}
+
+def start_irb
+  major_ver = RUBY_VERSION.split('.').first.to_i
+
+  %w[
+    irb rdoc
+  ]
+    .tap { _1 << 'fiddle' if Cinnabar::Utils::OS.windows? }
+    .tap { _1 << 'reline' if major_ver >= 4 }
+    .then(&require_gems)
+
+  two_spaces = '  '
+
+  Kernel.warn <<~GEM_VER
+    #{two_spaces}irb:\t#{IRB::VERSION}
+    #{two_spaces}rdoc:\t#{RDoc::VERSION}
+    #{Dir.pwd}
+  GEM_VER
+
+  IRB.start
+end
+
+begin
+  require_relative '../lib/version'
+rescue StandardError
+  nil
+end
+
+unless ARGV.empty?
+  require 'rbconfig'
+  ENV['RUBYOPT'] = '--disable=gems'
+  exec RbConfig.ruby, *ARGV
+end
+
+start_irb

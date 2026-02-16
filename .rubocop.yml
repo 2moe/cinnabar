@@ -42,4 +42,3 @@ Layout/MultilineMethodCallIndentation:
 Naming/AsciiIdentifiers:
   # AsciiConstants: false
   Enabled: false
-

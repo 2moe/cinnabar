@@ -1,0 +1,162 @@
+#!/usr/bin/env -S ruby --disable=gems
+# ====================
+# Depends: ruby (>= 3.1), bat | batcat, eza
+#
+# rubocop:disable Style/GlobalVars
+# rubocop:disable Style/MixinUsage
+# rubocop:disable Style/MultilineBlockChain
+# frozen_string_literal: true
+
+# ====================
+# NOTE
+#   The first launch may be slow because it generates the cache JSON.
+#   Subsequent launches reuse the cache as much as possible for the fastest startup.
+#
+# Usage:
+#   `firb` => Enter irb
+# in IRB:
+#   l           #=> `eza --icons`
+#   ll          #=> `eza --icons -lh`
+#   la          #=> `eza --icons -lah`
+#   cat 'file'  #=> `bat -Pp file`
+#   which :ruby #=> `which ruby`
+#   cdir '~/.cache' #=> `cd ~/.cache; pwd; ls`
+#   pwd         #=> Dir.pwd
+#
+# Install Dependencies:
+#
+# - Windows:
+#     winget install Microsoft.VCRedist.2015+.x64
+#     # OR: winget install Microsoft.VCRedist.2015+.arm64
+#
+#     scoop install bat eza
+#
+# - macOS:
+#     brew install bat eza
+#
+# - Debian:
+#
+#     apt update
+#     apt install -y bat eza
+#     ln -svf /usr/bin/batcat /usr/local/bin/bat
+#
+# - Arch:
+#   pacman -Sy bat eza
+#
+# - Alpine:
+#   apk add bat eza
+#
+# Note:
+#
+# On Alpine v3.23, if you encounter any rdoc‑related errors, you can try running the following command.
+#
+# ```ash
+#   unlink ~/.cache/ruby/gem_path.json
+#   su -c 'unlink /usr/lib/ruby/3.4.0/rdoc.rb'
+#   gem install rdoc
+# ```
+#
+# If you encounter any issues related to `env -S`, you can wrap it into a new script.
+#
+# ```sh
+# #!/bin/sh
+# # You need to replace /path/to/firb with the actual path
+# ruby --disable=gems /path/to/firb "$@"
+# ```
+# ====================
+Kernel.warn "  ruby:\t#{RUBY_VERSION}" if ARGV.empty?
+
+$ruby_cache_dir = -> {
+  require 'pathname'
+
+  env_dir = ENV['xdg_cache_home'.upcase]
+  case env_dir
+    when nil, ''
+      Pathname(Dir.home).join('.cache/ruby')
+    else
+      Pathname(env_dir).join('ruby')
+  end
+}.call
+
+-> {
+  libs = %w[gem_path utils]
+  lib_dir = File.expand_path('../../../lib/cinnabar', __dir__).then { Pathname _1 }
+  if lib_dir.exist?
+    libs.each { require lib_dir.join(_1) }
+    return
+  end
+
+  dir = $ruby_cache_dir.join('lib/cinnabar')
+  libs.each { require dir.join(_1) }
+}.call
+
+def new_cinnabar_gem_path_class(gems)
+  {
+    cache_dir: $ruby_cache_dir,
+    gems:,
+  }
+    .then(&Cinnabar.new_gem_path_proc)
+end
+
+def require_gems = ->(gems) {
+  new_cinnabar_gem_path_class(gems)
+    .append_load_path!
+
+  gems.each { require _1 }
+}
+
+def start_irb
+  major_ver = RUBY_VERSION.split('.').first.to_i
+
+  %w[
+    irb rdoc
+  ]
+    .tap { _1 << 'fiddle' if Cinnabar::Utils::OS.windows? }
+    .tap { _1 << 'reline' if major_ver >= 4 }
+    .then(&require_gems)
+
+  two_spaces = '  '
+  Kernel.warn <<~GEM_VER
+    #{two_spaces}irb:\t#{IRB::VERSION}
+    #{two_spaces}rdoc:\t#{RDoc::VERSION}
+    #{Dir.pwd}
+  GEM_VER
+  IRB.start
+end
+
+def run_ruby_cli
+  require 'rbconfig'
+  ENV['RUBYOPT'] = '--disable=gems'
+  exec RbConfig.ruby, *ARGV
+end
+
+-> {
+  %w[
+    logger
+    sinlog
+    argvise
+    cinnabar
+  ]
+    .then(&require_gems)
+
+  two_spaces = '  '
+  Kernel.warn <<~GEM_VER
+    #{two_spaces}argvise:  #{Argvise::VERSION}
+    #{two_spaces}cinnabar: #{Cinnabar::VERSION}
+    #{two_spaces}sinlog:   #{Sinlog::VERSION}
+  GEM_VER
+}.call
+
+include Cinnabar::FnPipe::Mixin
+include Cinnabar::Downloader::StrMixin
+include Cinnabar::Command::ArrMixin
+include Cinnabar::Command::TaskArrMixin
+include Cinnabar::StrToPath::Mixin
+include Sinlog::Mixin
+include Argvise::HashMixin
+
+require_relative '../lib/firb'
+# ====================
+run_ruby_cli unless ARGV.empty?
+
+start_irb

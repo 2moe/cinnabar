@@ -24,11 +24,12 @@ A:
 2. Cinnabar is toxic. This project was developed for *Dirty and Quick* purposes and may produce unexpected side effects—in a sense, it is not entirely harmless.
 3. Cinnabar, a mineral form of mercury sulfide (HgS), is a deep red-colored stone. And ruby is also a deep red stone. Naming a Ruby project "Cinnabar" is particularly fitting.
 
-## API DOC
+## Documentation
 
-![ClassDiagram](../misc/assets/svg/ClassDiagram.svg)
+[![ClassDiagram](../misc/assets/svg/ClassDiagram.svg)](https://raw.githubusercontent.com/2moe/cinnabar/refs/heads/main/misc/assets/svg/ClassDiagram.svg)
 
 - Github Pages: <https://2moe.github.io/cinnabar>
+- [ChangeLog](./ChangeLog.md)
 
 ## Quick Start
 
@@ -56,7 +57,7 @@ jobs:
         with:
           repository: 2moe/cinnabar
           path: cinnabar
-          ref: v0.0.3
+          ref: v0.0.8
 
       - name: (example) run cargo command
         run: |
@@ -164,3 +165,49 @@ jobs:
     __dir__.to_path #  Same as Pathname(__dir__)
       .join('tmp')
 ```
+
+### GemPath
+
+`GemPath` is used mainly with Ruby started via the `--disable=gems` flag; the code below is equivalent to `%w[ irb rdoc reline ].each { require it }`.
+
+```ruby
+def require_gems = ->(gems) {
+  {
+    # cache_dir: File.expand_path('~/.cache/ruby'),
+    gems:,
+  }
+    .then(&Cinnabar.new_gem_path_proc)
+    .append_load_path!
+
+  gems.each { require _1 }
+}
+
+%w[
+  irb rdoc reline
+].then(&require_gems)
+```
+
+#### Faster IRB
+
+Because `GemPath` automatically caches gem `require_paths`, combining it with `ruby --disable=gems` can significantly reduce IRB startup time.
+
+1. Run: [misc/firb/install.ps1](../misc/firb/install.ps1)
+
+OR:
+
+```pwsh
+gem install cinnabar
+```
+
+2.
+  - Enter the directory:
+    - `ruby -r cinnabar -e "p Cinnabar.firb_path"`
+    - OR: `${XDG_CACHE_HOME:-~/.cache}/ruby/firb/bin/` (POSIX sh)
+    - OR: `~/.cache/ruby/firb/bin/`
+    - OR: `%UserProfile%\.cache\ruby\firb\bin` (Windows CMD)
+
+3. run
+  - [`./firb0`](../misc/firb/bin/firb0)
+  - OR [`.\firb0.bat`](../misc/firb/bin/firb0.bat) (Windows)
+  - OR [`./firb`](../misc/firb/bin/firb)
+  - OR `.\firb.bat` (Windows)

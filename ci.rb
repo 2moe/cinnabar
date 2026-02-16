@@ -7,16 +7,19 @@ FS = FileUtils
 # `load_path`.push 'misc/download'
 $: << File.expand_path('misc/download', __dir__)
 
-# Fix ruby v4.0.
-# When `--disable=gems` is used,
-# the `$LOAD_PATH` for `logger` must be specified manually,
-# otherwise `sinlog` will raise an error.
+# Fix ruby v4.0:
+#   When `--disable=gems` is used, the `$LOAD_PATH` for `logger` must be specified manually,
+#   otherwise `sinlog` will raise an error.
 -> {
   return if RUBY_VERSION.split('.').first.to_i <= 3
 
-  require_relative 'lib/cinnabar/path'
-  cache_file = File.expand_path('load_path.txt', __dir__)
-  Cinnabar::Path.find_and_append_load_path('logger', cache_file:)
+  require_relative 'lib/cinnabar/gem_path'
+
+  {
+    cache_file: File.expand_path('load_path.json', __dir__),
+    gems: %w[logger],
+  }.then(&Cinnabar.new_gem_path_proc)
+    .append_load_path!
 }.call
 
 # ----------
@@ -41,5 +44,6 @@ end
 if Dir.exist? Cinnabar::CI_DIR
   def require_ci(script) = require File.join(Cinnabar::CI_DIR, script)
 end
+
 # ----------
 load ARGV[0]

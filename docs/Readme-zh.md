@@ -24,9 +24,10 @@
 2.  朱砂有毒。这个项目是为了 **猛、糙、快** (a.k.a. *Dirty and Quick*) 的目的而开发的，可能会产生意料之外的副作用（它并非完全无害）。
 3.  朱砂是一种硫化汞 (HgS) 的矿物，呈深红色，而 Ruby 也是一种深红色的宝石。给一个 Ruby 项目取名为 “Cinnabar（朱砂）” 非常贴切。
 
-## API DOC
+## 文档
 
-![ClassDiagram](../misc/assets/svg/ClassDiagram.svg)
+[![ClassDiagram](../misc/assets/svg/ClassDiagram.svg)](https://raw.githubusercontent.com/2moe/cinnabar/refs/heads/main/misc/assets/svg/ClassDiagram.svg)
 
 - Github Pages: <https://2moe.github.io/cinnabar>
-
+- [变更日志](./ChangeLog.md)
+- 详见[英文 Readme](./Readme.md)

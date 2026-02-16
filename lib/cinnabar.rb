@@ -5,7 +5,9 @@
 
 require_relative 'cinnabar/00_pre'
 require_relative 'cinnabar/cmd_runner'
+require_relative 'cinnabar/gem_path' unless defined? Cinnabar::GemPathCore
 require_relative 'cinnabar/net'
 require_relative 'cinnabar/path'
 require_relative 'cinnabar/pipe'
+require_relative 'cinnabar/utils' unless defined? Cinnabar::Utils
 require_relative 'cinnabar/version'
