@@ -38,7 +38,9 @@ include Sinlog::Mixin
 include Argvise::HashMixin
 # ----------
 module Cinnabar
-  CI_DIR = File.expand_path('ci', __dir__)
+  CI_DIR = %w[.github/_ci_ misc/ci]
+    .map { File.expand_path("../#{_1}", __dir__) }
+    .find { |path| Dir.exist?(path) } || File.expand_path('ci', __dir__)
 end
 
 if Dir.exist? Cinnabar::CI_DIR

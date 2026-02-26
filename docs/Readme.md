@@ -35,6 +35,8 @@ A:
 
 Github Actions for cinnabar
 
+![Image](https://github.com/user-attachments/assets/a4697c24-8e67-42fa-8363-d9267b3bcfb4)
+
 ```yaml
 env:
   # Speeds up script startup by disabling RubyGems
