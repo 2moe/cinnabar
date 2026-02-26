@@ -41,16 +41,16 @@ Github Actions for cinnabar
 env:
   # Speeds up script startup by disabling RubyGems
   RUBYOPT: "--disable=gems"
-  default_ci_shell: ruby cinnabar/ci.rb {0}
   # optional values: debug, info, warn, error, fatal, unknown
   RUBY_LOG: debug
+
+defaults:
+  run:
+    shell: ruby cinnabar/ci.rb {0}
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: ${{env.default_ci_shell}}
     steps:
       - uses: actions/checkout@v6
 
