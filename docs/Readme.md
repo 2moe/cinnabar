@@ -39,14 +39,13 @@ Github Actions for cinnabar
 
 ```yaml
 env:
-  # Speeds up script startup by disabling RubyGems
-  RUBYOPT: "--disable=gems"
   # optional values: debug, info, warn, error, fatal, unknown
   RUBY_LOG: debug
 
 defaults:
   run:
-    shell: ruby cinnabar/ci.rb {0}
+    # Speeds up script startup by disabling RubyGems
+    shell: ruby --disable=gems cinnabar/ci.rb {0}
 
 jobs:
   build:
