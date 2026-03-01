@@ -38,13 +38,42 @@ include Sinlog::Mixin
 include Argvise::HashMixin
 # ----------
 module Cinnabar
-  CI_DIR = %w[.github/_ci_ misc/ci]
-    .map { File.expand_path("../#{_1}", __dir__) }
-    .find { |path| Dir.exist?(path) } || File.expand_path('ci', __dir__)
+  CI_DIR = -> {
+    enval = ENV['CINNABAR_CI_DIR']
+    case enval
+      when nil, ''
+        ()
+      else
+        return File.expand_path(enval, __dir__)
+    end
+
+    %w[.github/_ci_ misc/ci]
+      .map { File.expand_path("../#{_1}", __dir__) }
+      .find { |path| Dir.exist?(path) } || File.expand_path('ci', __dir__)
+  }.call
+
+  CI_LIBS = -> {
+    case enval = ENV['CINNABAR_CI_LIBS']
+      when nil, ''
+        return ()
+    end
+
+    data = JSON.parse(enval)
+    case data
+      when []
+        ()
+      when Array
+        data
+      else
+        ()
+    end
+  }.call
 end
 
 if Dir.exist? Cinnabar::CI_DIR
   def require_ci(script) = require File.join(Cinnabar::CI_DIR, script)
+
+  Cinnabar::CI_LIBS&.each { require_ci(_1) }
 end
 
 # ----------
