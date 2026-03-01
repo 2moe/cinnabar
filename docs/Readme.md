@@ -37,8 +37,37 @@ Github Actions for cinnabar
 
 ![Image](https://github.com/user-attachments/assets/a4697c24-8e67-42fa-8363-d9267b3bcfb4)
 
+
+**Structure**:
+
+```sh
+Your Project
+│
+├──.github
+│     ├── _ci_
+│     │    ├── preload_xx.rb
+│     │    └── preload_yy.rb
+│     └── workflows
+│          └── build_zz.yml
+├── cinnabar (Clone within the workflow)
+│      ├── (...)
+│      └── ci.rb (*)
+└── (...)
+```
+
+**workflow file**:
+
 ```yaml
 env:
+  # (Optional)
+  # Relative to the position of **cinnabar/**
+  CINNABAR_CI_DIR: '../.github/_ci_'
+
+  # (Optional)
+  # The value of CINNABAR_CI_LIBS is generally a list of files located in the directory CINNABAR_CI_DIR.
+  # type: String: '["json", "array"]'
+  CINNABAR_CI_LIBS: '["preload_xx.rb", "preload_yy.rb"]'
+
   # optional values: debug, info, warn, error, fatal, unknown
   RUBY_LOG: debug
 
@@ -58,7 +87,7 @@ jobs:
         with:
           repository: 2moe/cinnabar
           path: cinnabar
-          ref: v0.0.8
+          ref: v0.0.9-alpha.1
 
       - name: (example) run cargo command
         run: |
